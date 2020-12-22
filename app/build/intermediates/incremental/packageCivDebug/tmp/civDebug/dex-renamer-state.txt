@@ -1,0 +1,4 @@
+#Tue Dec 22 11:03:24 EST 2020
+base.0=/home/carlos/virgil/4.1.1.17/atak-civ/plugins/plugintemplate/app/build/intermediates/dex/civDebug/mergeProjectDexCivDebug/classes.dex
+path.0=classes.dex
+renamed.0=classes.dex

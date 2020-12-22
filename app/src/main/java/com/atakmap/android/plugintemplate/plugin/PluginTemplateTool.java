@@ -2,11 +2,13 @@
 package com.atakmap.android.plugintemplate.plugin;
 
 import com.atakmap.android.ipc.AtakBroadcast;
-import com.atakmap.android.plugintemplate.PluginTemplateDropDownReceiver;
+import com.atakmap.android.plugintemplate.PluginDropDownReceiver;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.ViewGroup;
@@ -65,7 +67,7 @@ public class PluginTemplateTool extends Tool implements ToolDescriptor {
 
         //arg2.setVisibility(ViewGroup.INVISIBLE);
         Intent i = new Intent(
-                PluginTemplateDropDownReceiver.SHOW_PLUGIN);
+                PluginDropDownReceiver.SHOW_PLUGIN);
         AtakBroadcast.getInstance().sendBroadcast(i);
     }
 

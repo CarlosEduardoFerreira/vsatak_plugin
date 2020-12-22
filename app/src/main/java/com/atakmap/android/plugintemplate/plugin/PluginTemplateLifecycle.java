@@ -5,14 +5,25 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import com.atak.plugins.impl.PluginLayoutInflater;
 import com.atakmap.android.maps.MapComponent;
 import com.atakmap.android.maps.MapView;
 import com.atakmap.android.plugintemplate.PluginTemplateMapComponent;
 
 import transapps.maps.plugin.lifecycle.Lifecycle;
+
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.TextView;
+
 import com.atakmap.coremap.log.Log;
 
 public class PluginTemplateLifecycle implements Lifecycle {
@@ -20,6 +31,9 @@ public class PluginTemplateLifecycle implements Lifecycle {
     private final Context pluginContext;
     private final Collection<MapComponent> overlays;
     private MapView mapView;
+
+    @SuppressLint("StaticFieldLeak")
+    public static Activity mainActivity;
 
     private final static String TAG = "PluginTemplateLifecycle";
 
@@ -43,6 +57,9 @@ public class PluginTemplateLifecycle implements Lifecycle {
             Log.w(TAG, "This plugin is only compatible with ATAK MapView");
             return;
         }
+
+        mainActivity = arg0;
+
         this.mapView = (MapView) arg1.getView();
         PluginTemplateLifecycle.this.overlays
                 .add(new PluginTemplateMapComponent());
@@ -64,6 +81,8 @@ public class PluginTemplateLifecycle implements Lifecycle {
                 iter.remove();
             }
         }
+
+
     }
 
     @Override
