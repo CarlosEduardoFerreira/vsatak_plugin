@@ -1,0 +1,50 @@
+com/atakmap/android/plugintemplate/plugin/PluginTemplateLifecycle.java
+ com.atakmap.android.plugintemplate.plugin.PluginTemplateLifecycle
+com/atakmap/android/plugintemplate/PluginApi.java
+ com.atakmap.android.plugintemplate.PluginApi
+ com.atakmap.android.plugintemplate.PluginApi$1
+ com.atakmap.android.plugintemplate.PluginApi$2
+ com.atakmap.android.plugintemplate.PluginApi$3
+ com.atakmap.android.plugintemplate.PluginApi$4
+ com.atakmap.android.plugintemplate.PluginApi$5
+ com.atakmap.android.plugintemplate.PluginApi$6
+ com.atakmap.android.plugintemplate.PluginApi$Callback
+com/atakmap/android/plugintemplate/PluginDropDownReceiver.java
+ com.atakmap.android.plugintemplate.PluginDropDownReceiver
+ com.atakmap.android.plugintemplate.PluginDropDownReceiver$1
+ com.atakmap.android.plugintemplate.PluginDropDownReceiver$1$1
+ com.atakmap.android.plugintemplate.PluginDropDownReceiver$2
+ com.atakmap.android.plugintemplate.PluginDropDownReceiver$2$1
+ com.atakmap.android.plugintemplate.PluginDropDownReceiver$2$1$1
+ com.atakmap.android.plugintemplate.PluginDropDownReceiver$2$1$1$1
+ com.atakmap.android.plugintemplate.PluginDropDownReceiver$2$1$2
+ com.atakmap.android.plugintemplate.PluginDropDownReceiver$2$1$3
+ com.atakmap.android.plugintemplate.PluginDropDownReceiver$3
+ com.atakmap.android.plugintemplate.PluginDropDownReceiver$4
+ com.atakmap.android.plugintemplate.PluginDropDownReceiver$4$1
+ com.atakmap.android.plugintemplate.PluginDropDownReceiver$4$1$1
+ com.atakmap.android.plugintemplate.PluginDropDownReceiver$4$1$1$1
+ com.atakmap.android.plugintemplate.PluginDropDownReceiver$4$1$1$1$1
+ com.atakmap.android.plugintemplate.PluginDropDownReceiver$4$1$2
+ com.atakmap.android.plugintemplate.PluginDropDownReceiver$4$1$3
+ com.atakmap.android.plugintemplate.PluginDropDownReceiver$5
+ com.atakmap.android.plugintemplate.PluginDropDownReceiver$5$1
+ com.atakmap.android.plugintemplate.PluginDropDownReceiver$5$1$1
+ com.atakmap.android.plugintemplate.PluginDropDownReceiver$5$2
+ com.atakmap.android.plugintemplate.PluginDropDownReceiver$5$3
+ com.atakmap.android.plugintemplate.PluginDropDownReceiver$6
+ com.atakmap.android.plugintemplate.PluginDropDownReceiver$6$1
+ com.atakmap.android.plugintemplate.PluginDropDownReceiver$7
+ com.atakmap.android.plugintemplate.PluginDropDownReceiver$8
+ com.atakmap.android.plugintemplate.PluginDropDownReceiver$9
+com/atakmap/android/plugintemplate/PluginTemplateMapComponent.java
+ com.atakmap.android.plugintemplate.PluginTemplateMapComponent
+ com.atakmap.android.plugintemplate.PluginTemplateMapComponent$1
+com/atakmap/android/plugintemplate/plugin/PluginNativeLoader.java
+ com.atakmap.android.plugintemplate.plugin.PluginNativeLoader
+com/atakmap/android/plugintemplate/plugin/BuildConfig.java
+ com.atakmap.android.plugintemplate.plugin.BuildConfig
+com/atakmap/android/plugintemplate/PluginTemplateDropDownReceiver.java
+ com.atakmap.android.plugintemplate.PluginTemplateDropDownReceiver
+com/atakmap/android/plugintemplate/plugin/PluginTemplateTool.java
+ com.atakmap.android.plugintemplate.plugin.PluginTemplateTool
