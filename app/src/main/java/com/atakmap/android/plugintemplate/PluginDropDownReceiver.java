@@ -109,14 +109,14 @@ public class PluginDropDownReceiver extends DropDownReceiver implements
                 // Send to API
                 try {
                     JSONObject jsonObj = new JSONObject();
-                    jsonObj.put("uuid", uid);
-                    jsonObj.put("y_coord", latitude);
-                    jsonObj.put("x_coord", longitude);
+                    jsonObj.put("uid", uid);
+                    jsonObj.put("latitude", latitude);
+                    jsonObj.put("longitude", longitude);
 
                     // Send Marker to the API
                     PluginApi.insertMarker(jsonObj, new PluginApi.Callback() {
                         public void onResultReceived(JSONObject result) throws JSONException {
-                            showToast(result.getString("error"), "New Marker added.");
+                            noErrorToast(result.getString("error"), "New Marker added.");
                         }
                     });
 
@@ -136,7 +136,7 @@ public class PluginDropDownReceiver extends DropDownReceiver implements
                     checkConnection(new PluginApi.Callback() {
                         public void onResultReceived(JSONObject result) throws JSONException {
 
-                            if (showToast(result.getString("error"), "")) {
+                            if (noErrorToast(result.getString("error"), "")) {
 
                                 final AlertDialog.Builder builder = new AlertDialog.Builder(PluginTemplateLifecycle.mainActivity);
                                 builder.setTitle("Point Name");
@@ -225,7 +225,7 @@ public class PluginDropDownReceiver extends DropDownReceiver implements
                 try {
                     checkConnection(new PluginApi.Callback() {
                         public void onResultReceived(JSONObject result) throws JSONException {
-                            if (showToast(result.getString("error"), "")) {
+                            if (noErrorToast(result.getString("error"), "")) {
 
                                 final AlertDialog.Builder builder = new AlertDialog.Builder(PluginTemplateLifecycle.mainActivity);
                                 builder.setTitle("Are you sure you want to DELETE all Points?");
@@ -236,7 +236,7 @@ public class PluginDropDownReceiver extends DropDownReceiver implements
 
                                         PluginApi.deleteMarkers(new PluginApi.Callback() {
                                             public void onResultReceived(JSONObject result) throws JSONException {
-                                                if (showToast(result.getString("error"), "")) {
+                                                if (noErrorToast(result.getString("error"), "")) {
                                                     getMapView().getRootGroup().findMapGroup(GROUP_NAME).clearItems();
 
                                                     Handler mainHandler = new Handler(Looper.getMainLooper());
@@ -303,10 +303,10 @@ public class PluginDropDownReceiver extends DropDownReceiver implements
                         try {
                             checkConnection(new PluginApi.Callback() {
                                 public void onResultReceived(JSONObject result) throws JSONException {
-                                    if (!showToast(result.getString("error"), result.getString("success"))) {
+                                    if (!noErrorToast(result.getString("error"), result.getString("success"))) {
                                         settingsButton.performClick();
                                     } else {
-                                        showToast("", "Connection OK");
+                                        noErrorToast("", "Connection OK");
                                     }
                                 }
                             });
@@ -430,7 +430,14 @@ public class PluginDropDownReceiver extends DropDownReceiver implements
         }
     }
 
-
+    /**
+     * downloadMarkersAndUpdateListView()
+     * Download Markers from the API and
+     * update the ListView "listViewMarkers"
+     *
+     * no parameters
+     * no return
+     */
     private void downloadMarkersAndUpdateListView() throws JSONException {
 
         final ListView listViewMarkers = templateView.findViewById(R.id.list_view_markers);
@@ -454,7 +461,7 @@ public class PluginDropDownReceiver extends DropDownReceiver implements
                         markers.add(m);
 
                     } catch (JSONException e) {
-                        showToast("The Plugin cannot load this data.", "");
+                        noErrorToast("The Plugin cannot load this data.", "");
                     }
                 }
 
@@ -467,14 +474,14 @@ public class PluginDropDownReceiver extends DropDownReceiver implements
 
 
     /**
-     * This function check the variable error,
+     * noErrorToast() check the variable error,
      * show Toast and return a boolean
      *
      * @param error   = information/text from the API
      * @param success = local message to show to the user
      * @return = False if the API returns error, otherwise True
      */
-    private static boolean showToast(String error, String success) {
+    private static boolean noErrorToast(String error, String success) {
         final String msg = error.equals("") ? success : error;
 
         new Handler(Looper.getMainLooper()).post(new Runnable() {

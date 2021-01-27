@@ -14,9 +14,9 @@ import java.net.URL;
 public class PluginApi {
 
     final static String HTTP = "http://";
-    static String API_URL = "192.168.1.15";
+    static String API_URL = "";
 
-    final static String SERVER_PORT = ":9000";
+    final static String SERVER_PORT = ":5000";
 
     // Definition of the callback interface
     public interface Callback {
@@ -31,7 +31,7 @@ public class PluginApi {
                 try {
 
                     final URL url = new URL(HTTP + API_URL + SERVER_PORT + endpoint);
-
+                    Log.d("VINTAK", "url: " + url.toString());
                     JSONObject jsonError = new JSONObject();
                     if(API_URL.equals("")) {
                         jsonError.put("error", "Please configure the Server's IP address.");
@@ -102,7 +102,7 @@ public class PluginApi {
 
 
     public static void insertMarker(JSONObject jsonObj, final Callback callback) {
-        send("/upload_point", "POST", jsonObj, new Callback() {
+        send("/insert_marker", "POST", jsonObj, new Callback() {
             public void onResultReceived(JSONObject result) throws JSONException {
                 callback.onResultReceived(result);
             }
@@ -111,7 +111,7 @@ public class PluginApi {
 
 
     public static void listMarkers(final Callback callback) throws JSONException {
-        send("/list_files", "GET", null, new Callback() {
+        send("/list_markers", "GET", null, new Callback() {
             public void onResultReceived(JSONObject result) throws JSONException {
                 callback.onResultReceived(result);
             }
@@ -123,7 +123,7 @@ public class PluginApi {
         JSONObject jsonParam = new JSONObject();
         jsonParam.put("uid", uid);
 
-        send("/download_data", "POST", jsonParam, new Callback() {
+        send("/get_marker", "POST", jsonParam, new Callback() {
             public void onResultReceived(JSONObject result) throws JSONException {
                 callbackList.onResultReceived(result);
             }
@@ -132,7 +132,7 @@ public class PluginApi {
 
 
     public static void deleteMarkers(final Callback callback) {
-        send("/delete_file", "DELETE", null, new Callback() {
+        send("/delete_markers", "POST", null, new Callback() {
             public void onResultReceived(JSONObject result) throws JSONException {
                 callback.onResultReceived(result);
             }
@@ -141,7 +141,7 @@ public class PluginApi {
 
 
     public static void checkApiConnection(final Callback callback) {
-        send("/ping", "GET", null, new Callback() {
+        send("/check_connection", "GET", null, new Callback() {
             public void onResultReceived(JSONObject result) throws JSONException {
                 callback.onResultReceived(result);
             }
