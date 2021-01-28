@@ -37,6 +37,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Random;
 import java.util.UUID;
 
@@ -153,7 +154,7 @@ public class PluginDropDownReceiver extends DropDownReceiver implements
                                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        String uid = input.getText().toString();
+                                        final String uid = input.getText().toString();
                                         if (uid.length() != 6) {
                                             Toast.makeText(mainContext,
                                                     "Point Name does not have 6 characters.",
@@ -162,13 +163,31 @@ public class PluginDropDownReceiver extends DropDownReceiver implements
                                             try {
                                                 PluginApi.getMarker(uid, new PluginApi.Callback() {
                                                     public void onResultReceived(JSONObject result) throws JSONException {
-                                                        cleanupMap();
 
-                                                        String uid = result.getString("id");
-                                                        double latitude = result.getDouble("y_coord");
-                                                        double longitude = result.getDouble("x_coord");
+                                                        if(result.has("uid")) {
 
-                                                        setMarker(uid, latitude, longitude);
+                                                            // Show only the selected marker at the map
+                                                            cleanupMap();
+                                                            String juid = result.getString("uid");
+                                                            double latitude = result.getDouble("latitude");
+                                                            double longitude = result.getDouble("longitude");
+                                                            setMarker(juid, latitude, longitude);
+
+                                                            // Remove not selected markers from the ListView
+                                                            for (int i = markers.size() - 1; i >= 0; i--) {
+                                                                Log.d("VINTAK", "markers.get(i).getUID(): " +
+                                                                        markers.get(i).getUID() + " | juid: " + juid);
+                                                                if (!markers.get(i).getUID().equals(juid)) {
+                                                                    markers.remove(markers.get(i));
+                                                                }
+                                                            }
+                                                            updateListViewMarkers(listViewMarkers, false);
+
+                                                        } else {
+                                                            String txt = "ID not found. (" + uid + ")";
+                                                            Toast.makeText(context, txt, Toast.LENGTH_SHORT).show();
+                                                        }
+
                                                     }
                                                 });
                                             } catch (JSONException e) {
@@ -453,8 +472,8 @@ public class PluginDropDownReceiver extends DropDownReceiver implements
                     String uid = iter.next();
                     try {
                         JSONObject obj = result.getJSONObject(uid);
-                        double latitude = obj.getDouble("y_coord");
-                        double longitude = obj.getDouble("x_coord");
+                        double latitude = obj.getDouble("latitude");
+                        double longitude = obj.getDouble("longitude");
 
                         GeoPoint gp = new GeoPoint(latitude, longitude);
                         Marker m = new Marker(gp, uid);
@@ -554,6 +573,7 @@ public class PluginDropDownReceiver extends DropDownReceiver implements
     }
 
     public Marker setMarker(String uid, double latitude, double longitude) {
+
         Marker m = setupMarker(uid, latitude, longitude);
         addMarkerToTheMap(m);
 
