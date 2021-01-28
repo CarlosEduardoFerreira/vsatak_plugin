@@ -147,6 +147,7 @@ hs_err_pid*
 *.ipr
 *~
 *.swp
+/*/build
 
 # Keystore files
 *.jks
