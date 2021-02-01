@@ -37,7 +37,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Random;
 import java.util.UUID;
 
@@ -389,7 +388,11 @@ public class PluginDropDownReceiver extends DropDownReceiver implements
                         Marker m = markers.get(position);
                         setMarker(m.getUID(), m.getPoint().getLatitude(), m.getPoint().getLongitude());
 
-                        Toast.makeText(mainContext, m.getUID(), Toast.LENGTH_SHORT).show();
+                        // call cpp here
+                        HelloJni jni = new HelloJni();
+                        String txt = jni.stringFromJNI();
+
+                        Toast.makeText(mainContext, txt, Toast.LENGTH_SHORT).show();
                     }
                 });
             }

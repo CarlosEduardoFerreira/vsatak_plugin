@@ -131,7 +131,24 @@ def getVersionCode() {
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "29.0.2"
+    buildToolsVersion "29.0.3"
+    defaultConfig {
+        minSdkVersion 21
+        ndk {
+            abiFilters 'arm64-v8a', 'armeabi-v7a', 'x86_64', 'x86'
+        }
+        ndkVersion = '22.0.7026061'
+        packagingOptions {
+            pickFirst 'lib/arm64-v8a/libhello-jni.so'
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            version "3.10.2"
+            path "src/main/cpp/CMakeLists.txt"
+        }
+    }
 
    dexOptions {
         jumboMode = true
@@ -191,11 +208,11 @@ android {
         }
     }
 
+
     flavorDimensions "application"
 
     productFlavors {
         mil {
-
             dimension "application"
             manifestPlaceholders = [atakApiVersion: "com.atakmap.app@" + ATAK_VERSION + ".MIL"]
         }
@@ -254,6 +271,9 @@ android {
             setProperty("archivesBaseName", "ATAK-Plugin-" + rootProject.name + "-" + PLUGIN_VERSION + "-" + getVersionName() + "-" + ATAK_VERSION)
             defaultConfig.versionCode = getVersionCode()
             defaultConfig.versionName = PLUGIN_VERSION + " (" + getVersionName() + ") - [" + ATAK_VERSION + "]"
+
+            jni.srcDirs = ['jni']
+            jniLibs.srcDirs = ['src/main/jniLibs']
         }
 
         // Move the tests to tests/java, tests/res, etc...
@@ -270,13 +290,6 @@ android {
 
     }
 
-    defaultConfig {
-        minSdkVersion 21
-        ndk {
-            abiFilters "armeabi-v7a", "arm64-v8a", "x86"
-        }
-    }
-
     if (file("$project.projectDir/../espresso/testSetup.gradle").exists()) {
          apply from: '../espresso/testSetup.gradle'
     } else {
@@ -287,6 +300,10 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: '*.jar')
+}
+repositories {
+    maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
+    mavenCentral()
 }
 
 static def getValueFromPropertiesFile(File propFile, String key) {

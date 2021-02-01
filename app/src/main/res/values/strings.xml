@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App -->
-    <string name="app_name">Virgil Systems</string>
+    <string name="app_name">VINTAK</string>
     <!-- description -->
-    <string name="app_desc">by Carlos Ferreira</string>
+    <string name="app_desc">by Virgil Systems</string>
 
     <string name="text1">Nothing to show :p</string>
     <string name="text2">Click the top button to place a random marker.</string>

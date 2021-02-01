@@ -46,5 +46,7 @@ com/atakmap/android/plugintemplate/plugin/BuildConfig.java
  com.atakmap.android.plugintemplate.plugin.BuildConfig
 com/atakmap/android/plugintemplate/PluginTemplateDropDownReceiver.java
  com.atakmap.android.plugintemplate.PluginTemplateDropDownReceiver
+com/atakmap/android/plugintemplate/HelloJni.java
+ com.atakmap.android.plugintemplate.HelloJni
 com/atakmap/android/plugintemplate/plugin/PluginTemplateTool.java
  com.atakmap.android.plugintemplate.plugin.PluginTemplateTool
