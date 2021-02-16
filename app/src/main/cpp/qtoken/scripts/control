@@ -1,0 +1,10 @@
+Package: VIN
+Version: 0.1.0
+Section: custom
+Priority: optional
+Architecture: all
+Essential: no
+Installed-Size: 1024
+Maintainer: virgilsystems.com
+Description: The peer application for the VIN peer-to-peer distributed network.
+Depends: libboost-all-dev, libssl-dev, libgflags-dev, libconfig++-dev, libsodium-dev, libpoco-dev

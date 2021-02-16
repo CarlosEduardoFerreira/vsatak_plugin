@@ -1,0 +1,30 @@
+# When adding a new stage make sure it has it's own file
+# in the include stucture below.
+stages:
+  - docker
+  - analysis
+  - build
+  - test
+  - package
+
+# Defaults for the entire pipeline and therefore every job in the include statement.
+# Be careful when editing this please.
+default:
+  interruptible: true
+  timeout: 30m
+
+# Put any env vars for the ci jobs here
+variables:
+  VIN_VERSION: 0.1.0
+  BUILD_IMAGE:  ${CI_REGISTRY}/${CI_PROJECT_PATH}/${CI_COMMIT_REF_SLUG}:build
+  TEST_IMAGE:  ${CI_REGISTRY}/${CI_PROJECT_PATH}/${CI_COMMIT_REF_SLUG}:test
+  BUILD_ARTIFACT: VIN_${VIN_VERSION}.deb
+  TEST_ARTIFACT: VIN_test.tar.gz
+
+include:
+  - local: .gitlab/ci/global.gitlab-ci.yml
+  - local: .gitlab/ci/docker.gitlab-ci.yml
+  - local: .gitlab/ci/build.gitlab-ci.yml
+  - local: .gitlab/ci/analysis.gitlab-ci.yml
+  - local: .gitlab/ci/test.gitlab-ci.yml
+  - local: .gitlab/ci/package.gitlab-ci.yml

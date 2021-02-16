@@ -1,0 +1,9 @@
+package:
+  stage: package
+  image: ${BUILD_IMAGE}
+  dependencies:
+    - build
+  script:
+    - curl -u "${ARTIFACTORY_USER}:${ARTIFACTORY_TOKEN}" -T ${BUILD_ARTIFACT} "${ARTIFACTORY_URL}/${ARTIFACTORY_BUILD_DIR}/"
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master"

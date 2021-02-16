@@ -1,0 +1,36 @@
+FROM ubuntu:focal
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get -y update && apt-get -y upgrade && \
+        # alpine packages
+        apt-get -y install libboost-all-dev git cmake g++ libssl-dev valgrind unzip wget cppcheck curl libgflags-dev libconfig++-dev libsodium-dev pkg-config libpoco-dev && \
+        # build/install kademlia (FIXME: Use our mirror)
+        export LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/:${LD_LIBRARY_PATH} && \
+        ln -s /usr/lib/x86_64-linux-gnu/libboost* /usr/lib && \
+        git clone https://github.com/DavidKeller/kademlia.git && \
+        cd kademlia && \
+        mkdir build && cd build && \
+        cmake .. && \
+        make && \
+        cp ./src/kademlia/libkademlia.so /usr/lib/libkademlia.so && \
+        mkdir /usr/include/kademlia && \
+        cp ./src/kademlia/libkademlia.so /usr/lib && \
+        cp -r ../include/kademlia/* /usr/include/kademlia && \
+        cd ../.. && \
+        # build/install aff3ct
+        wget https://gitlab.com/aff3ct/aff3ct/-/jobs/302344037/artifacts/raw/builds/aff3ct_master_linux_gcc_x64_avx2_1ceddfc.zip -O aff3ct.zip && \
+        unzip aff3ct.zip && \
+        cp -r build_linux_gcc_x64_avx2/include/aff3ct-2.3.5* /usr/include/aff3ct-2.3.5 && \
+        curl -uanonymous: -O https://opai.jfrog.io/artifactory/VIN/libaff3ct-2.3.5.so && \
+        chmod 777 libaff3ct-2.3.5.so && \
+        cp libaff3ct-2.3.5.so /usr/lib/
+
+#install lvm
+# RUN curl -L -uanonymous: -O https://opai.jfrog.io/artifactory/LVM/lvm-1.0.0-Linux.deb && \
+#         dpkg -i lvm-1.0.0-Linux.deb
+
+WORKDIR /usr/src/VIN
+
+COPY . .
+

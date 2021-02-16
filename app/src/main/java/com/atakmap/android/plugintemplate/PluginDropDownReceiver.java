@@ -388,9 +388,9 @@ public class PluginDropDownReceiver extends DropDownReceiver implements
                         Marker m = markers.get(position);
                         setMarker(m.getUID(), m.getPoint().getLatitude(), m.getPoint().getLongitude());
 
-                        // call cpp here
-                        HelloJni jni = new HelloJni();
-                        String txt = jni.stringFromJNI();
+                        // call cpp here for testing only
+                        MainBridgeCPP bridge = new MainBridgeCPP();
+                        String txt = bridge.stringFromCPP();
 
                         Toast.makeText(mainContext, txt, Toast.LENGTH_SHORT).show();
                     }

@@ -1,0 +1,61 @@
+mem_leak:
+  stage: test
+  image: ${BUILD_IMAGE}
+  dependencies:
+    - build
+  before_script:
+    - echo "Doing valgrind on node and bootstrap"
+    #- curl -L -u "${ARTIFACTORY_USER}:${ARTIFACTORY_TOKEN}" -O "${ARTIFACTORY_URL}/${ARTIFACTORY_BUILD_DIR}/VIN-BUILD.tar.gz"
+    - touch commands.txt valg_log.txt vin_out.txt
+    - dpkg -i ${BUILD_ARTIFACT}
+    - apt-get update
+    - apt --fix-broken install
+  script:
+    - valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --log-file=valg_log.txt VIN -t "commands.txt" -b > vin_out.txt &
+    - sleep 10
+    - echo "exit" >> commands.txt
+    - sleep 10
+  after_script:
+    - echo $CI_PROJECT_DIR
+    - cat vin_out.txt
+    - cat valg_log.txt
+    - cat commands.txt
+  artifacts:
+    reports:
+    paths:
+      - ${CI_PROJECT_DIR}/valg_log.txt
+  # rules:
+  # - if: $CI_MERGE_REQUEST_IID
+  # - if: $CI_COMMIT_TAG
+  # - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+unit_test:
+  stage: test
+  image: ${BUILD_IMAGE}
+  dependencies:
+    - build
+  before_script:
+    - mkdir unit_test
+    - mv ${TEST_ARTIFACT} unit_test
+    - cd unit_test
+    - tar -xzf ${TEST_ARTIFACT}
+    - cd build/test
+  script:
+    - ./VIN_test
+
+# networking-smoke-test:
+#   stage: test
+#   image: ${BUILD_IMAGE}
+#   dependencies:
+#     - build
+#   before_script:
+#     - tar -xzf ${BUILD_ARTIFACT}
+#     - cp scripts/* package/build
+#     - cd package/build
+#   script:
+#     - ls -a
+#     - pwd
+#     - ls -a ../output
+#     - ./network_test.sh
+  
+  

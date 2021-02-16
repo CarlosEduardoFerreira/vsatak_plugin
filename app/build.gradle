@@ -56,7 +56,7 @@ buildscript {
             credentials {
                 username = takrepoUser
                 password = takrepoPassword
-    }
+            }
         }
     }
     dependencies {
@@ -65,8 +65,8 @@ buildscript {
             classpath "com.atakmap.gradle:atak-gradle-takdev:${takdevVersion}"
         } else {
             classpath files(takdevPlugin)
+        }
     }
- }
 }
 
 allprojects {
@@ -128,26 +128,49 @@ def getVersionCode() {
     return revision
 }
 
+def boost_dir = local_props("boost.dir")
+def boost_dir_libs = boost_dir + "/libs"
+def boost_dir_inc  = boost_dir + "/include"
 
 android {
     compileSdkVersion 26
     buildToolsVersion "29.0.3"
     defaultConfig {
-        minSdkVersion 21
+        minSdkVersion 23
+
+        externalNativeBuild {
+            cmake {
+                arguments '-DANDROID_STL=c++_shared'
+
+                // This is used in CMakeLists.txt so the native code can find/use (prebuilt) boost
+                arguments '-DBOOST_LIBS_DIR=' + boost_dir_libs
+                arguments '-DBOOST_INC_DIR='  + boost_dir_inc
+
+                arguments '-IBOOST_INCLUDEDIR=' + boost_dir_inc
+                arguments '-LBOOST_LIBRARYDIR' + boost_dir_libs
+                arguments '-DBoost_DEBUG=ON'
+            }
+        }
+
         ndk {
-            abiFilters 'arm64-v8a', 'armeabi-v7a', 'x86_64', 'x86'
+            abiFilters 'arm64-v8a'
         }
-        ndkVersion = '22.0.7026061'
-        packagingOptions {
-            pickFirst 'lib/arm64-v8a/libhello-jni.so'
-        }
+        ndkVersion "21.4.7075529"
     }
 
     externalNativeBuild {
         cmake {
-            version "3.10.2"
+            version "3.18.1"
+
+            // Running CMake - (Main file)
+            println("Installing dependencies (CMakeLists) ...")
             path "src/main/cpp/CMakeLists.txt"
         }
+    }/**/
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
    dexOptions {
@@ -155,21 +178,21 @@ android {
     }
 
     lintOptions {
-          checkReleaseBuilds true
-          // Or, if you prefer, you can continue to check for errors in release builds,
-          // but continue the build even when errors are found:
-          abortOnError true
-      }
+        checkReleaseBuilds true
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError true
+    }
 
     signingConfigs {
         debug {
-            def kf = getValueFromPropertiesFile(project.rootProject.file('local.properties'), 'takDebugKeyFile')
-            def kfp = getValueFromPropertiesFile(project.rootProject.file('local.properties'), 'takDebugKeyFilePassword')
-            def ka = getValueFromPropertiesFile(project.rootProject.file('local.properties'), 'takDebugKeyAlias')
-            def kp = getValueFromPropertiesFile(project.rootProject.file('local.properties'), 'takDebugKeyPassword')
+            def kf = local_props('takDebugKeyFile')
+            def kfp = local_props('takDebugKeyFilePassword')
+            def ka = local_props('takDebugKeyAlias')
+            def kp = local_props('takDebugKeyPassword')
 
             if (kf == null) {
-                 throw new GradleException("No signing key configured!")
+                 throw GradleException("No signing key configured!")
             }
  
             storeFile file(kf)
@@ -178,13 +201,13 @@ android {
             if (kp != null) keyPassword kp
         }
         release {
-            def kf = getValueFromPropertiesFile(project.rootProject.file('local.properties'), 'takReleaseKeyFile')
-            def kfp = getValueFromPropertiesFile(project.rootProject.file('local.properties'), 'takReleaseKeyFilePassword')
-            def ka = getValueFromPropertiesFile(project.rootProject.file('local.properties'), 'takReleaseKeyAlias')
-            def kp = getValueFromPropertiesFile(project.rootProject.file('local.properties'), 'takReleaseKeyPassword')
+            def kf = local_props('takReleaseKeyFile')
+            def kfp = local_props('takReleaseKeyFilePassword')
+            def ka = local_props('takReleaseKeyAlias')
+            def kp = local_props('takReleaseKeyPassword')
 
             if (kf == null) {
-                 throw new GradleException("No signing key configured!")
+                 throw GradleException("No signing key configured!")
             }
 
             storeFile file(kf)
@@ -207,6 +230,27 @@ android {
             matchingFallbacks = ['odk']
         }
     }
+    /*
+    git_repository(
+            name = "com_github_gflags_gflags",
+            commit = "9cfee34507cd80ce6d24a56be304f14ac74299d1",
+            remote = "https://github.com/gflags/gflags.git"
+    )/**/
+
+    //preBuild.doFirst {
+        //println("Executing qtoken install...")
+        //commandLine 'sh', '-c', './src/main/qtoken/scripts/ubuntu-install.sh'
+
+        //def proc = "src/main/qtoken/scripts/ubuntu-install.sh".execute()
+        //proc.waitForProcessOutput(System.out, System.err)
+    //}
+    /*
+    task installQToken(type: Exec) {
+        println("Installing qtoken...")
+        commandLine 'src/main/qtoken/scripts/ubuntu-install.sh'
+    }
+    build.dependsOn installQToken
+    /**/
 
 
     flavorDimensions "application"
@@ -272,8 +316,23 @@ android {
             defaultConfig.versionCode = getVersionCode()
             defaultConfig.versionName = PLUGIN_VERSION + " (" + getVersionName() + ") - [" + ATAK_VERSION + "]"
 
-            jni.srcDirs = ['jni']
-            jniLibs.srcDirs = ['src/main/jniLibs']
+            //jni.srcDirs = ['src/main/cpp/libs']
+            //jniLibs.srcDirs = ['src/main/jniLibs']
+
+            // Android Studio doesn't package precompiled external (*.so) libs into apk, even if linked against via "add_library (... SHARED IMPORTED) in CMakeLists.txt
+            // See eg https://stackoverflow.com/questions/24357687/how-to-include-so-library-in-android-studio/29234765
+            // Hopefully this will be remedied in near future.
+            // As a workaround in the meantime, need to add them manually to jniLibs.srcDirs
+            // Note: This causes ALL *.so files in ABI (eg "armeabi-v7a") subdir of this dir to get packaged into .apk - relative to "app" dir
+            // If you want to just include those necessary (eg chrono, system) copy/link them to a separate dir, and reference that dir here instead.
+            /*
+            jniLibs.srcDirs = [
+                    // should contain any external libs which should be compiled in {armeabi-v7a,arm64-v8a,x86,x86_64,mips} subdirs
+                    boost_dir_libs
+
+                    //, "src/main/JniLibs/boost" // could add additional dirs (with ABI subdirs) to be packaged into apk like this.
+                    // Relative paths like this will be interpreted as relative to "app" dir
+            ]/**/
         }
 
         // Move the tests to tests/java, tests/res, etc...
@@ -290,31 +349,45 @@ android {
 
     }
 
+
     if (file("$project.projectDir/../espresso/testSetup.gradle").exists()) {
-         apply from: '../espresso/testSetup.gradle'
+         apply from: '../../espresso/testSetup.gradle'
     } else {
          println("espresso test harness not found")
     }
 }
 
+repositories {
+    maven {
+        url 'https://dl.bintray.com/kotlin/kotlin-eap'
+    }
+    /*
+    maven {
+        url  "https://dl.bintray.com/terl/lazysodium-maven"
+    }/**/
+
+    mavenCentral()
+
+    jcenter()
+}
 
 dependencies {
     implementation fileTree(dir: 'libs', include: '*.jar')
-}
-repositories {
-    maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
-    mavenCentral()
+
+    //implementation 'com.github.joshjdevl.libsodiumjni:libsodium-jni-aar:2.0.1'
+
+    //implementation "net.java.dev.jna:jna:5.7.0@aar"
 }
 
-static def getValueFromPropertiesFile(File propFile, String key) {
-    if(!propFile.isFile() || !propFile.canRead())
-        return null
-    def prop = new Properties()
-    def reader = propFile.newReader()
-    try {
-        prop.load(reader)
-    } finally {
-        reader.close()
-    }
-    return prop.get(key)
+
+//------------------------------------------------------------
+// reads ~ value from local.properties file
+def local_props(key) {
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+    def val = properties.getProperty(key, null)
+    if (val == null)
+        throw GradleException("Can't find value '${key}' in file 'local.properties'.")
+
+    return val
 }

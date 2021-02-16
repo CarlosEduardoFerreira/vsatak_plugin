@@ -1,0 +1,6 @@
+/home/carlos/virgil/4.1.1.17/atak-civ/plugins/plugintemplate/app/src/main/cpp/CMakeFiles/rebuild_cache.dir
+/home/carlos/virgil/4.1.1.17/atak-civ/plugins/plugintemplate/app/src/main/cpp/CMakeFiles/edit_cache.dir
+/home/carlos/virgil/4.1.1.17/atak-civ/plugins/plugintemplate/app/src/main/cpp/CMakeFiles/main-bridge.dir
+/home/carlos/virgil/4.1.1.17/atak-civ/plugins/plugintemplate/app/src/main/cpp/qtoken/CMakeFiles/rebuild_cache.dir
+/home/carlos/virgil/4.1.1.17/atak-civ/plugins/plugintemplate/app/src/main/cpp/qtoken/CMakeFiles/edit_cache.dir
+/home/carlos/virgil/4.1.1.17/atak-civ/plugins/plugintemplate/app/src/main/cpp/qtoken/CMakeFiles/VIN.dir
