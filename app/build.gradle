@@ -316,7 +316,7 @@ android {
             defaultConfig.versionCode = getVersionCode()
             defaultConfig.versionName = PLUGIN_VERSION + " (" + getVersionName() + ") - [" + ATAK_VERSION + "]"
 
-            //jni.srcDirs = ['src/main/cpp/libs']
+            jni.srcDirs = ['src/main/cpp/libs']
             //jniLibs.srcDirs = ['src/main/jniLibs']
 
             // Android Studio doesn't package precompiled external (*.so) libs into apk, even if linked against via "add_library (... SHARED IMPORTED) in CMakeLists.txt
@@ -325,7 +325,7 @@ android {
             // As a workaround in the meantime, need to add them manually to jniLibs.srcDirs
             // Note: This causes ALL *.so files in ABI (eg "armeabi-v7a") subdir of this dir to get packaged into .apk - relative to "app" dir
             // If you want to just include those necessary (eg chrono, system) copy/link them to a separate dir, and reference that dir here instead.
-            /*
+
             jniLibs.srcDirs = [
                     // should contain any external libs which should be compiled in {armeabi-v7a,arm64-v8a,x86,x86_64,mips} subdirs
                     boost_dir_libs
