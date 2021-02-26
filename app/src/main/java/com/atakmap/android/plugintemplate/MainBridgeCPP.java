@@ -18,13 +18,43 @@ package com.atakmap.android.plugintemplate;
 
 import android.util.Log;
 
+
 class MainBridgeCPP {
 
     static {
-        Log.d("VINTAK", "MainBridge Loaded");
+
         System.loadLibrary("main-bridge");
+
+//        System.loadLibrary("gnustl_shared");
+//        System.loadLibrary("c++_shared");
+
+//        System.loadLibrary("config++");
+//        System.loadLibrary("stdc++");
+//        System.loadLibrary("gcc_s"); // depend libc.so.6
+
+//        System.loadLibrary("boost_context"); // depend of libc++_shared.so
+//        System.loadLibrary("boost_fiber");
+//        System.loadLibrary("boost_filesystem");
+//        System.loadLibrary("boost_regex");
+//        System.loadLibrary("boost_system");
+
+//        System.loadLibrary("aff3ct-2.3.5");
+
+//        System.loadLibrary("kademlia");
+
+//        System.loadLibrary("poco_foundation");
+//        System.loadLibrary("poco_json");
+        System.loadLibrary("poco_net");
+//        System.loadLibrary("poco_util");
+//        System.loadLibrary("poco_xml");
+
+        System.loadLibrary("qtoken");
+
+        Log.d("VINTAK", "MainBridge Loaded");
     }
 
     public final native String stringFromCPP();
 }
+
+
 

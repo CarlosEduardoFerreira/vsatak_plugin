@@ -1,0 +1,107 @@
+Signature-Version: 1.0
+Created-By: Android Gradle 4.1.2
+SHA-256-Digest-Manifest: Dh3Rz55TBRXnJMUebTM253ds7qXhthhHzN2WgxhYZBg=
+X-Android-APK-Signed: 2
+
+Name: AndroidManifest.xml
+SHA-256-Digest: gb2/Q2anKQL4conad9dXibDU2PBC8PLC8nJd2wAc8fI=
+
+Name: assets/plugin.xml
+SHA-256-Digest: +RkgyNtok4/WNHa3ptZdUChm2GGn3yoB/I4QC5SzYLc=
+
+Name: classes.dex
+SHA-256-Digest: JbGvLQ7LTecwG54wxqAN3QBGONmb3ci/KI+OuB72T6o=
+
+Name: lib/arm64-v8a/libaff3ct-2.3.5.so
+SHA-256-Digest: vxmjoTZO5q5ZP82OOfx77Z5dDf3xrjwVVXal8PCufFY=
+
+Name: lib/arm64-v8a/libboost_context.so
+SHA-256-Digest: Xx8IPUdNA0rUBQlgbS51NSt/f0opAhhvAvEs753wBWg=
+
+Name: lib/arm64-v8a/libboost_fiber.so
+SHA-256-Digest: uMY4Vdq0F9VD1Z9aQZ97U3ewl7T8z9dpXWFCHV960cI=
+
+Name: lib/arm64-v8a/libboost_filesystem.so
+SHA-256-Digest: qfdeEp+GU4QSEyRXjX9dAYWXdovQEIfBUYBk3dH9VXQ=
+
+Name: lib/arm64-v8a/libboost_regex.so
+SHA-256-Digest: j/atnHV84cj3IAxTyg6f+W+fM3YtaP7P01kg5PPNwkA=
+
+Name: lib/arm64-v8a/libboost_system.so
+SHA-256-Digest: pUa1+cUNHL9MfSl+9ImKqSbzWaCnDdSlyv43fj5NAy8=
+
+Name: lib/arm64-v8a/libc++_shared.so
+SHA-256-Digest: GPUeSM+0XmoRLFejtAyM5+1X8Ei3QFPuBW0NEbYqFjU=
+
+Name: lib/arm64-v8a/libconfig++.so
+SHA-256-Digest: QQ5vJqYWetc2uyZ3QSGvaU7DCFHmN04Kp6eZPPx51oE=
+
+Name: lib/arm64-v8a/libgcc_s.so
+SHA-256-Digest: ViABPsuft6NBwcxKpIEnLDfb435ARPgmQc2fcHUjuYM=
+
+Name: lib/arm64-v8a/libgnustl_shared.so
+SHA-256-Digest: CZYML5OgNldeqR33qlULaDr8agWEpytvV+FYzjbg2Ks=
+
+Name: lib/arm64-v8a/libkademlia.so
+SHA-256-Digest: 6yclcE6GXaU282mgn5j4YXw4OvB8XPIHO4bEspIXHWA=
+
+Name: lib/arm64-v8a/libmain-bridge.so
+SHA-256-Digest: OQyiYIaEGH+WResyeQBPQoubpGrFOYcA5RzExMcVz/A=
+
+Name: lib/arm64-v8a/libpoco_foundation.so
+SHA-256-Digest: TBQOu6IBkrf48d/xOYmDVmmOl0jWaiN4vIqzatPO+to=
+
+Name: lib/arm64-v8a/libpoco_json.so
+SHA-256-Digest: AkHF6/deM6W/Ypx3I8XZTkpw1F2sCrX1uDhf9RksbBs=
+
+Name: lib/arm64-v8a/libpoco_net.so
+SHA-256-Digest: C+L6Dcl4eRaJqb9ZJPrYUTtU/3vpO5gqM0LF5CLKAkU=
+
+Name: lib/arm64-v8a/libpoco_util.so
+SHA-256-Digest: CxPcdLUWK360P7keDQj1tebwCT2wwO081LfE3FAMi/Q=
+
+Name: lib/arm64-v8a/libpoco_xml.so
+SHA-256-Digest: njwmdK1jYFrAKHDXFQXWX6nCt9DGt1Rat6YNHHtv5sg=
+
+Name: lib/arm64-v8a/libqtoken.so
+SHA-256-Digest: ZGbRUYzOE2nvE57rOirUex50QP5d+p+y9iyNOsk5ZYk=
+
+Name: lib/arm64-v8a/libstdc++.so
+SHA-256-Digest: aeXUrROG1gVv6uTEmfaumxyjDp9owqDphoKRkk2NeBk=
+
+Name: res/drawable/btn_gray.xml
+SHA-256-Digest: FthZEBQaPImrhmdug0DBtWVmg+uEwl+v10Rr0blXEbI=
+
+Name: res/drawable/button_corner.xml
+SHA-256-Digest: OKj//zixNlRkUKa4iLDFV4i5KkhZqBPv2gPItp63opA=
+
+Name: res/drawable/ic_launcher.png
+SHA-256-Digest: mImn7Volq/RXQvSy3ElkvwUaXkrid2X7/gVMndxg3k0=
+
+Name: res/drawable/marker_black.png
+SHA-256-Digest: 8dBVjdkSQAIEVSkj6dK8Eg4D+sGniO4M4tAgvXrlrGg=
+
+Name: res/drawable/marker_empty.xml
+SHA-256-Digest: M5PEkgKLEg+Ck9HVRvfJQXLQ6/HxRAtO7ad1F33OXDg=
+
+Name: res/drawable/marker_red.png
+SHA-256-Digest: oYCE0RwZptmCRv0vOd4Ci5DfONlNCdbiXoQ1fFq8yIY=
+
+Name: res/drawable/marker_white.png
+SHA-256-Digest: E8dFeWv/BFgyrXe7dKZLsGIufnDMkPai5smeHFBhXow=
+
+Name: res/drawable/new_dark_button_bg.xml
+SHA-256-Digest: AvWavBrkWvd5m2i6vzY5XtZbhRklyAtne6xQJJkTagg=
+
+Name: res/drawable/new_dark_button_disabled.xml
+SHA-256-Digest: /IB4mPCKpQ/0oh5EpxszRSesroIl3GgKtG9uefEPATo=
+
+Name: res/drawable/new_dark_button_selected.xml
+SHA-256-Digest: mVVGqqNRJ/u4QiANcfZJ8MKvoTLsJSyUWV6j4W4vNmg=
+
+Name: res/layout/main_layout.xml
+SHA-256-Digest: LktS91cgKV5Gf8nBnV9xxUg/sk3F1PX/x/VkSXiVBLg=
+
+Name: resources.arsc
+SHA-256-Digest: f7sqgczP9GqVKI1+ac6tkreJ0BmPegvAtHI9/Uchkio=
+
