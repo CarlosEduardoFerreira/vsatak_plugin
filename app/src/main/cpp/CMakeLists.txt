@@ -26,7 +26,7 @@ set_target_properties(stdc++ PROPERTIES IMPORTED_LOCATION
         )
 # --------------------------------------------- StdC++ --
 
- -- Boost ----------------------------------------------
+# -- Boost ----------------------------------------------
 add_library(boost_context SHARED IMPORTED)
 set_target_properties(boost_context PROPERTIES IMPORTED_LOCATION
         ${PROJECT_APP}/libs/${ANDROID_ABI}/libboost_context.so
@@ -51,7 +51,7 @@ add_library(boost_system SHARED IMPORTED)
 set_target_properties(boost_system PROPERTIES IMPORTED_LOCATION
         ${PROJECT_APP}/libs/${ANDROID_ABI}/libboost_system.so
         )
- ---------------------------------------------- Boost --
+# ---------------------------------------------- Boost --
 
 # -- Aff3ct ---------------------------------------------
 add_library(aff3ct SHARED IMPORTED)

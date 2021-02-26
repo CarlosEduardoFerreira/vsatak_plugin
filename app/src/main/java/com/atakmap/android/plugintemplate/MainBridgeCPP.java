@@ -42,7 +42,7 @@ class MainBridgeCPP {
 
 //        System.loadLibrary("kademlia");
 
-//        System.loadLibrary("poco_foundation");
+        System.loadLibrary("poco_foundation");
 //        System.loadLibrary("poco_json");
         System.loadLibrary("poco_net");
 //        System.loadLibrary("poco_util");
