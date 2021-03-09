@@ -1,5 +1,7 @@
 #include <string.h>
 #include <jni.h>
+#include "qtoken/src/crypto_receipt.hpp"
+#include "qtoken/src/node.hpp"
 
 extern "C" {
 
@@ -8,6 +10,14 @@ extern "C" {
 
         return env->NewStringUTF("Hi from CPP");
     }
+
+    JNIEXPORT jobject JNICALL Java_com_atakmap_android_plugintemplate_MainBridgeCPP_doShare(JNIEnv* env, jobject thiz )
+    {
+
+        return (CryptoReceipt) Node.doShare("", "", "");
+    }
+
+
 //
 //
 //    JNIEXPORT int JNICALL Java_com_atakmap_android_plugintemplate_MainBridgeCPP_main(JNIEnv *env, jobject thiz) {

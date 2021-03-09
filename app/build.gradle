@@ -159,8 +159,8 @@ android {
         }
 
         //ndkVersion "16.1.4479499"
-        ndkVersion "19.2.5345600"
-        //ndkVersion "21.4.7075529"
+        //ndkVersion "19.2.5345600"
+        ndkVersion "21.4.7075529"
 
         //multiDexEnabled true
     }
@@ -215,7 +215,7 @@ android {
             if (kf == null) {
                  throw GradleException("No signing key configured!")
             }
- 
+
             storeFile file(kf)
             if (kfp != null) storePassword kfp
             if (ka != null) keyAlias ka

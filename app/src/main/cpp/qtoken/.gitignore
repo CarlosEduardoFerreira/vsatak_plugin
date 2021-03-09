@@ -1,0 +1,15 @@
+*.out
+*.txt
+build
+_builds
+test/build
+output
+.ccls-cache
+Hunter
+.ccls
+Debug
+compile_commands.json
+.vscode
+.vin
+scripts/VIN*
+clang-format:Zone.Identifier

@@ -390,7 +390,8 @@ public class PluginDropDownReceiver extends DropDownReceiver implements
 
                         // call cpp here for testing only
                         MainBridgeCPP bridge = new MainBridgeCPP();
-                        String txt = bridge.stringFromCPP();
+                        String txt = (String) bridge.doShare();
+                        //String txt = bridge.stringFromCPP();
 
                         Toast.makeText(mainContext, txt, Toast.LENGTH_SHORT).show();
                     }
