@@ -4,56 +4,66 @@ project(Main-Bridge)
 
 set(PROJECT_APP "/home/carlos/virgil/4.1.1.17/atak-civ/plugins/vintak2/app")
 
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED on)
-set(ANDROID_STL "c++_shared")
+# -- Log ------------------------------------------------
+find_library (log-lib log)
+# ------------------------------------------------ Log --
+
+# -- QToken --------------------------------------------
+add_library(qtoken SHARED IMPORTED)
+set_target_properties(qtoken PROPERTIES IMPORTED_LOCATION
+        ${PROJECT_APP}/libs/${ANDROID_ABI}/libqtoken.so
+        )
+target_include_directories(qtoken INTERFACE
+        ${PROJECT_APP}/src/main/cpp/include/qtoken
+        ${PROJECT_APP}/src/main/cpp/include/aff3ct-2.3.5
+        ${PROJECT_APP}/src/main/cpp/include/kademlia
+        ${PROJECT_APP}/src/main/cpp/include/libconfig
+        ${PROJECT_APP}/src/main/cpp/include/openssl
+        ${PROJECT_APP}/src/main/cpp/include/Poco
+        ${PROJECT_APP}/src/main/cpp/include/Poco/Net
+        )
+target_link_libraries(
+        qtoken INTERFACE
+        aff3ct-2.3.5
+        c++_shared
+        crypto
+        gflags_nothreads
+        kademlia
+        PocoData
+        PocoDataSQLite
+        PocoEncondings
+        PocoFoundation
+        PocoJSON
+        PocoMongoDB
+        PocoNet
+        PocoRedis
+        PocoUtil
+        PocoXML
+        PocoZip
+        ssl
+        ${log-lib}
+)
+# -------------------------------------------- QToken --
+
+# -- Include --------------------------------------------
+include_directories(${PROJECT_APP}/src/main/cpp/include/aff3ct-2.3.5/aff3ct)
+include_directories(${PROJECT_APP}/src/main/cpp/include/aff3ct-2.3.5/MIPP)
+include_directories(${PROJECT_APP}/src/main/cpp/include/aff3ct-2.3.5/rang)
+include_directories(${PROJECT_APP}/src/main/cpp/include/Poco)
+include_directories(${PROJECT_APP}/src/main/cpp/include/Poco/Net)
+include_directories(${PROJECT_APP}/src/main/cpp/include/libconfig)
+include_directories(${PROJECT_APP}/src/main/cpp/include/qtoken)
+# -------------------------------------------- Include --
 
 # -- Main Bridge ---------------------------------------
 add_library(main-bridge SHARED main-bridge.cpp)
 # --------------------------------------- Main Bridge --
 
-# -- LibConfig ------------------------------------------
-#add_library(config++ SHARED IMPORTED)
-#set_target_properties(config++ PROPERTIES IMPORTED_LOCATION
-#        ${PROJECT_APP}/libs/${ANDROID_ABI}/libconfig++.so
-#        )
-# ------------------------------------------ LibConfig --
-
-
-# -- QToken ---------------------------------------------
-add_library(qtoken SHARED IMPORTED)
-set_target_properties(qtoken PROPERTIES IMPORTED_LOCATION
-        ${PROJECT_APP}/libs/${ANDROID_ABI}/libqtoken.so
-        )
-# -------------------------------------------- QToken ---
-
-# -- Log ------------------------------------------------
-find_library (log-lib log)
-# ------------------------------------------------ Log --
-
-#add_subdirectory(qtoken)
-#find_library(stdc++
-#        HINTS ${PROJECT_APP}/libs/arm64-v8a)
-
 # -- Target ---------------------------------------------
 target_link_libraries(
-    main-bridge INTERFACE
-     #   qtoken/include/libconfig
-#    stdc++
-#    boost_context
-#    boost_fiber
-#    boost_filesystem
-#    boost_regex
-#    boost_system
-#    aff3ct
-#    kademlia
-#        libPocoFoundation
-#        libPocoJSON
-#        libPocoNet
-#        libPocoUtil
-#        libPocoXML
-    qtoken
-    ${log-lib}
+        main-bridge INTERFACE
+        qtoken
+        ${log-lib}
 )
 # --------------------------------------------- Target --
 

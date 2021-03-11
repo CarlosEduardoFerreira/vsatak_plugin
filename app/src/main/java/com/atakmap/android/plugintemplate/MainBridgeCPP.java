@@ -19,46 +19,56 @@ package com.atakmap.android.plugintemplate;
 import android.util.Log;
 
 
-class MainBridgeCPP {
+public class MainBridgeCPP {
 
-    static {
 
-        System.loadLibrary("main-bridge");
 
-//        System.loadLibrary("gnustl_shared");
-//        System.loadLibrary("c++_shared");
-//
-//        System.loadLibrary("config++");
-//        System.loadLibrary("stdc++");
-//        System.loadLibrary("gcc_s"); // depend libc.so.6
-
-        System.loadLibrary("crypto");
-        System.loadLibrary("ssl");
-
-        System.loadLibrary("boost_context"); // depend of libc++_shared.so
-        System.loadLibrary("boost_fiber");
-        System.loadLibrary("boost_filesystem");
-        System.loadLibrary("boost_regex");
-        System.loadLibrary("boost_system");
-
-        System.loadLibrary("aff3ct-2.3.5");
-
-        System.loadLibrary("kademlia");
-
-        System.loadLibrary("PocoFundation");
-        System.loadLibrary("PocoJSON");
-        System.loadLibrary("PocoNet");
-        System.loadLibrary("PocoUtil");
-        System.loadLibrary("PocoXML");
-
-        System.loadLibrary("qtokenn");
-
-        Log.d("VINTAK", "MainBridge Loaded");
+    public void load() {
+        Qtoken.run();
     }
 
-    public final native String stringFromCPP();
 
-    public final native Object doShare();
+
+//    static {
+//
+//        System.loadLibrary("main-bridge");
+//
+////        System.loadLibrary("gnustl_shared");
+////        System.loadLibrary("c++_shared");
+////
+////        System.loadLibrary("config++");
+////        System.loadLibrary("stdc++");
+////        System.loadLibrary("gcc_s"); // depend libc.so.6
+//
+////        System.loadLibrary("crypto");
+////        System.loadLibrary("ssl");
+////
+////        System.loadLibrary("boost_context"); // depend of libc++_shared.so
+////        System.loadLibrary("boost_fiber");
+////        System.loadLibrary("boost_filesystem");
+////        System.loadLibrary("boost_regex");
+////        System.loadLibrary("boost_system");
+////
+////        System.loadLibrary("aff3ct-2.3.5");
+////
+////        System.loadLibrary("kademlia");
+////
+////        System.loadLibrary("PocoFundation");
+////        System.loadLibrary("PocoJSON");
+////        System.loadLibrary("PocoNet");
+////        System.loadLibrary("PocoUtil");
+////        System.loadLibrary("PocoXML");
+////
+////        System.loadLibrary("qtoken");
+//
+//        Log.d("###VINTAK", "MainBridge Loaded");
+//    }
+//
+//    public final native String c();
+//
+//    public final native Object doShare();
+//
+//    public final native void run();
 }
 
 

@@ -383,17 +383,19 @@ public class PluginDropDownReceiver extends DropDownReceiver implements
                 listViewMarkers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        getMapView().getRootGroup().findMapGroup(GROUP_NAME).clearItems();
+                        /*getMapView().getRootGroup().findMapGroup(GROUP_NAME).clearItems();
 
                         Marker m = markers.get(position);
                         setMarker(m.getUID(), m.getPoint().getLatitude(), m.getPoint().getLongitude());
-
+                        */
                         // call cpp here for testing only
                         MainBridgeCPP bridge = new MainBridgeCPP();
-                        String txt = (String) bridge.doShare();
+                        Log.d("###QTOKEN", "1");
+                        bridge.load();
+                        //String txt = (String) bridge.doShare();
                         //String txt = bridge.stringFromCPP();
 
-                        Toast.makeText(mainContext, txt, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mainContext, txt, Toast.LENGTH_SHORT).show();
                     }
                 });
             }

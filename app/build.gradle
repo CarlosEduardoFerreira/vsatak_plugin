@@ -156,6 +156,7 @@ android {
         ndk {
             abiFilters 'arm64-v8a'/*, 'armeabi-v7a', 'x86_64', 'x86' */
             stl 'c++_shared'
+            ldLibs "log"
         }
 
         //ndkVersion "16.1.4479499"
@@ -406,9 +407,6 @@ dependencies {
     implementation fileTree(dir: 'libs', include: '*.jar')
 
     implementation fileTree(dir: "$buildDir/native-libs", include: 'native-libs.jar')
-
-
-    //implementation 'com.github.joshjdevl.libsodiumjni:libsodium-jni-aar:2.0.1'
 
     //implementation "net.java.dev.jna:jna:5.7.0@aar"
 }

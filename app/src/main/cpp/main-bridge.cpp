@@ -1,21 +1,113 @@
 #include <string.h>
 #include <jni.h>
-#include "qtoken/src/crypto_receipt.hpp"
-#include "qtoken/src/node.hpp"
+#include <dlfcn.h>
+#include <string>
+#include <android/log.h>
+#include <iostream>
+
+#include "include/qtoken/nodes/node.hpp"
+
+using namespace Qtoken;
+
 
 extern "C" {
 
-    JNIEXPORT jstring JNICALL Java_com_atakmap_android_plugintemplate_MainBridgeCPP_stringFromCPP(JNIEnv* env, jobject thiz )
-    {
+JNIEXPORT void JNICALL
+Java_com_atakmap_android_plugintemplate_Qtoken_run(JNIEnv *env, jclass clazz) {
 
-        return env->NewStringUTF("Hi from CPP");
-    }
 
-    JNIEXPORT jobject JNICALL Java_com_atakmap_android_plugintemplate_MainBridgeCPP_doShare(JNIEnv* env, jobject thiz )
-    {
+//    const std::string& node_port, const std::string& node_receipt_port,
+//    const std::string& bootstrap_addr, std::istream* input_file
 
-        return (CryptoReceipt) Node.doShare("", "", "");
-    }
+    std::string node_port;
+    std::string receipt_port;
+    std::string addr;
+    std::istream* input;
+
+
+    Node *node = new Node(node_port, receipt_port, addr, input);
+
+
+    //__android_log_print(ANDROID_LOG_DEBUG, "###QTOKEN 2", "Could not resolve symbol %d\n", num);
+
+    //"/home/carlos/virgil/4.1.1.17/atak-civ/plugins/vintak2/app/libs/arm64-v8a/libqtoken.so"
+
+//    void* dlh = dlopen("libqtoken.so", RTLD_NOW | RTLD_GLOBAL);
+//    char *dl_error = dlerror();
+//    if(dl_error != nullptr) {
+//        std::cerr << "###QTOKEN - Caught an error while opening shared library: " << dl_error << std::endl;
+//    }
+//
+//    dlsym(dlh, "run");
+
+    //dlsym(dlh, "doShare");
+
+}
+
+//
+//    JNIEXPORT jstring JNICALL Java_com_atakmap_android_plugintemplate_MainBridgeCPP_stringFromCPP(JNIEnv* env, jobject thiz )
+//    {
+//
+//        return env->NewStringUTF("Hi from CPP");
+//    }
+//
+//    JNIEXPORT void JNICALL Java_com_atakmap_android_plugintemplate_MainBridgeCPP_run(JNIEnv* env, jobject thiz )
+//    {
+//
+////        void* libqtoken = dlopen("libqtoken.so", RTLD_LAZY | RTLD_GLOBAL);
+////        char *err = dlerror();
+////        if (err) {
+////            printf("###QTOKEN - Could not resolve symbol: %s\n", err);
+//
+//
+////        }
+//
+//        int num = 1;
+//
+//        __android_log_print(ANDROID_LOG_DEBUG, "###QTOKEN 2", "Could not resolve symbol %d\n", num);
+//
+//        void* dlh = dlopen("libqtoken.so", RTLD_NOW | RTLD_GLOBAL);
+//        char *dl_error = dlerror();
+//        if(dl_error != nullptr) {
+//            std::cerr << "###QTOKEN - Caught an error while opening shared library: " << dl_error << std::endl;
+//        }
+//
+////        if (!dlh)
+////        { fprintf(stderr, "###QTOKEN - dlopen failed: %s\n", dlerror());
+////            exit(EXIT_FAILURE); };
+//
+//        dlsym(dlh, "run");
+//        dlsym(dlh, "doShare");
+//
+//
+//    }
+
+//    JNIEXPORT jobject JNICALL Java_com_atakmap_android_plugintemplate_MainBridgeCPP_doShare(JNIEnv* env, jobject thiz )
+//    {
+//        typedef void (*do_share_t)();
+//
+//        // std::string app_path = "/home/carlos/virgil/4.1.1.17/atak-civ/plugins/vintak2/app";
+//        // const char *libqtoken = app_path + "/libs/arm64-v8a/libqtoken.so";
+//
+//        //Node node = Node.run();
+//
+//        //LOGD("###QTOKEN - 1");
+//
+//        void* libqtoken = dlopen("libqtoken.so", RTLD_LAZY | RTLD_GLOBAL);
+//        char *dl_error = dlerror();
+//        if(dl_error != nullptr) {
+//            std::cerr << "###QTOKEN - Caught an error while opening shared library: " << dl_error << std::endl;
+//        }
+//
+////        auto do_share = dlsym(libqtoken, "doShare");
+////        char *err = dlerror();
+////        if (err) {
+////            printf("###QTOKEN - Could not resolve symbol: %s\n", err);
+////        }
+//
+//        //printf("Plugin object returned: %c\n", do_share());
+//
+//    }
 
 
 //
