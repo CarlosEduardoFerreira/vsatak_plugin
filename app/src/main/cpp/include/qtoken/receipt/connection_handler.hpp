@@ -5,15 +5,15 @@
 #include <functional>
 #include <iostream>
 
-#include "../../Poco/Net/SocketNotification.h"
-#include "../../Poco/Util/ServerApplication.h"
-#include "../../Poco/Net/SocketReactor.h"
-#include "../../Poco/Net/NetException.h"
-#include "../../Poco/Net/SocketStream.h"
-#include "../../Poco/Net/StreamSocket.h"
-#include "../../Poco/NObserver.h"
-#include "../../Poco/Exception.h"
-#include "../../Poco/Thread.h"
+#include "Poco/Net/SocketNotification.h"
+#include "Poco/Util/ServerApplication.h"
+#include "Poco/Net/SocketReactor.h"
+#include "Poco/Net/NetException.h"
+#include "Poco/Net/SocketStream.h"
+#include "Poco/Net/StreamSocket.h"
+#include "Poco/NObserver.h"
+#include "Poco/Exception.h"
+#include "Poco/Thread.h"
 
 #include "globals/globals.hpp"
 #include "nodes/node.hpp"

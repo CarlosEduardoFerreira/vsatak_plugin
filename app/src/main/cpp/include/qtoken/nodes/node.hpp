@@ -1,15 +1,15 @@
 #ifndef NODE_H
 #define NODE_H
 
-#include "../../Poco/Event.h"
-#include "../../Poco/Net/ParallelSocketAcceptor.h"
-#include "../../Poco/Net/ServerSocket.h"
-#include "../../Poco/Net/SocketAcceptor.h"
-#include "../../Poco/Net/SocketReactor.h"
-#include "../../Poco/Util/HelpFormatter.h"
-#include "../../Poco/Util/Option.h"
-#include "../../Poco/Util/OptionSet.h"
-#include "../../Poco/Util/ServerApplication.h"
+#include "Poco/Event.h"
+#include "Poco/Net/ParallelSocketAcceptor.h"
+#include "Poco/Net/ServerSocket.h"
+#include "Poco/Net/SocketAcceptor.h"
+#include "Poco/Net/SocketReactor.h"
+#include "Poco/Util/HelpFormatter.h"
+#include "Poco/Util/Option.h"
+#include "Poco/Util/OptionSet.h"
+#include "Poco/Util/ServerApplication.h"
 
 #include "../coders/concurrent_decoder.hpp"
 #include "../coders/concurrent_encoder.hpp"

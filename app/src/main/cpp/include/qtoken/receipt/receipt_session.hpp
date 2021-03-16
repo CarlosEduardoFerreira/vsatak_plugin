@@ -6,8 +6,8 @@
 #include <iterator>
 #include <sstream>
 
-#include "../../Poco/Net/StreamSocket.h"
-#include "../../Poco/Logger.h"
+#include "Poco/Net/StreamSocket.h"
+#include "Poco/Logger.h"
 
 #include "receipt/crypto_receipt.hpp"
 #include "tools/types.hpp"

@@ -4,11 +4,11 @@
 #include <fstream>
 #include <iostream>
 
-#include "../../Poco/AutoPtr.h"
-#include "../../Poco/FormattingChannel.h"
-#include "../../Poco/Logger.h"
-#include "../../Poco/PatternFormatter.h"
-#include "../../Poco/SimpleFileChannel.h"
+#include "Poco/AutoPtr.h"
+#include "Poco/FormattingChannel.h"
+#include "Poco/Logger.h"
+#include "Poco/PatternFormatter.h"
+#include "Poco/SimpleFileChannel.h"
 
 #include <sys/stat.h>
 #include <sys/types.h>

@@ -8,8 +8,8 @@
 #include <fstream>       //ofstream
 #include <future>
 #include <iterator>
-#include "../../kademlia/first_session.hpp"
-#include "../../kademlia/session.hpp"
+#include "kademlia/first_session.hpp"
+#include "kademlia/session.hpp"
 
 #include "../globals/globals.hpp"
 #include "../globals/logger.hpp"

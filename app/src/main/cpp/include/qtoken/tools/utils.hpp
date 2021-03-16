@@ -8,8 +8,8 @@
 #include <iomanip>
 #include <iostream>
 #include <vector>
-#include "../../openssl/hmac.h"
-#include "../../openssl/sha.h"
+#include "openssl/hmac.h"
+#include "openssl/sha.h"
 
 #include "types.hpp"
 
