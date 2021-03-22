@@ -31,7 +31,7 @@ class Node;
  * ConnectionHandler handles new connections into the TCP socket by attaching
  * event handlers.
  * @param socket the TCP socket
- * @param reactor Poco reactor for adding events
+ * @param reactor include.Poco.Poco.Poco reactor for adding events
  */
 class ReceiptConnectionHandler {
 public:

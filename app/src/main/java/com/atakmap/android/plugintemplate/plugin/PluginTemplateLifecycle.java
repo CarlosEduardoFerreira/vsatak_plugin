@@ -1,4 +1,4 @@
-package com.atakmap.android.plugintemplate.plugin;
+ package com.atakmap.android.plugintemplate.plugin;
 
 import java.util.Collection;
 import java.util.Iterator;
