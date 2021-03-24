@@ -4,13 +4,143 @@
 #include <string>
 #include <android/log.h>
 #include <iostream>
+#include <fstream>
 
 #include "include/qtoken/nodes/node.hpp"
 
 using namespace Qtoken;
+using namespace std;
 
+string test_file = "test.txt";
 
 extern "C" {
+
+void aprint(const char *str) {
+    __android_log_print(ANDROID_LOG_DEBUG, "###", "%s", str);
+}
+
+void aprint2(basic_string<char, char_traits<char>, allocator<char>> str) {
+    __android_log_print(ANDROID_LOG_DEBUG, "###", "%s", str.c_str());
+}
+
+int read_file_1() {
+    ifstream is(test_file, ifstream::binary);
+    aprint("get_file_1 1");
+    if (is) {
+        // get length of file:
+        is.seekg(0, is.end);
+        int length = is.tellg();
+        is.seekg(0, is.beg);
+
+        char *buffer = new char[length];
+
+//        cout << "Reading " << length << " characters... ";
+        aprint("get_file_1 2");
+        // read data as a block:
+        is.read(buffer, length);
+
+        if (is) {// <== this is really odd
+            aprint("get_file_1 3");
+//            cout << "all characters read successfully.";
+        } else {
+            aprint("get_file_1 4");
+//            cout << "error: only " << is.gcount() << " could be read";
+        }
+        is.close();
+
+        // ...buffer contains the entire file...
+
+        delete[] buffer;
+    }
+    aprint("get_file_1 5");
+}
+
+void read_file_2(const string& file_name) {
+    std::ifstream file(file_name);
+    aprint("read_file_2 1");
+//    if (file.is_open()) {
+        aprint("read_file_2 2");
+        std::string line;
+        while (std::getline(file, line)) {
+            aprint("read_file_2 3");
+            // using printf() in all tests for consistency
+            //printf("%s", line.c_str());
+            aprint(line.c_str());
+        }
+        file.close();
+//    }
+    aprint("read_file_2 4");
+}
+
+void read_file_3(const string& file_name) {
+    filebuf fb;
+    aprint("read_file_3 1");
+    if (fb.open (file_name,ios::in))
+    {
+        aprint("read_file_3 2");
+        istream is(&fb);
+        while (is) {
+            aprint("read_file_3 3");
+            aprint(reinterpret_cast<const char *>(char(is.get())));
+//            cout << char(is.get());
+        }
+        fb.close();
+    }
+    aprint("read_file_3 4");
+}
+
+void read_file_4(string file) {
+    try {
+        std::ifstream f(file);
+
+        //const char *txt = "read_file_4 1 (" + num + ")";
+
+        aprint("read_file_4 1");
+
+        //f.exceptions ( std::ifstream::failbit | std::ifstream::badbit );
+
+        if (f.is_open()) {
+            aprint("read_file_4 2");
+            aprint(reinterpret_cast<const char *>(f.rdbuf()));
+//        std::cout << f.rdbuf();
+        }
+
+
+        ifstream myfile;
+        myfile.open(file.c_str());
+        if (myfile.fail()) {
+            aprint("read_file_4 3");
+//        cerr << "Could not open file: " << file << endl;
+        } else {
+            aprint("read_file_4 4");
+        }
+
+    } catch (std::ios_base::failure& f) {
+        aprint(f.what());
+        //std::cerr << "Exception opening file: " << std::strerror(errno) << "\n";
+    }
+
+    aprint("read_file_4 5");
+}
+
+void read_file_5(string file) {
+    std::ifstream f(file);
+
+    //const char *txt = "read_file_4 1 (" + num + ")";
+
+    aprint("read_file_4 1");
+
+    //f.exceptions ( std::ifstream::failbit | std::ifstream::badbit );
+
+    if (f.is_open()) {
+        aprint("read_file_4 2");
+        aprint(reinterpret_cast<const char *>(f.rdbuf()));
+//        std::cout << f.rdbuf();
+    }
+
+    aprint("read_file_4 3");
+}
+
 
 JNIEXPORT void JNICALL
 Java_com_atakmap_android_plugintemplate_Qtoken_run(JNIEnv *env, jclass clazz) {
@@ -19,16 +149,70 @@ Java_com_atakmap_android_plugintemplate_Qtoken_run(JNIEnv *env, jclass clazz) {
 //    const std::string& node_port, const std::string& node_receipt_port,
 //    const std::string& bootstrap_addr, std::istream* input_file
 
-    std::string node_port;
-    std::string receipt_port;
-    std::string addr;
-    std::istream* input;
+//    filebuf fb;
+//    if (fb.open ("test.txt",ios::in)) {
+//        istream is(&fb);
+//        if (!is.empty()) {
+//            std::string fd = FLAGS_t;
+//            try {
+//                fileinput.open(fd, std::ifstream::in);
+//            } catch (const ifstream::failure& e) {
+//                std::cout << "Invalid test filename provided" << std::endl;
+//            }
+//            testmode = 1;
+//        }
+//    }
+//    istream& input = (testmode == 0) ? std::cin : fileinput;
 
+    //aprint2(std::filesystem::current_path().string());
 
-    Node *node = new Node(node_port, receipt_port, addr, input);
+    string node_port = "8082";
+    string receipt_port = "9092";
+    string addr;
+    //istream* input = get_file_2();
 
+    string test_file_11 = "/home/carlos/virgil/4.1.1.17/atak-civ/plugins/vintak2/app/src/main/cpp/test2.txt";
+//    string test_file_2 = "src/main/cpp/test.txt";
+//    string test_file_3 = "main/cpp/test.txt";
+//    string test_file_4 = "cpp/test.txt";
+//    string test_file_5 = "test.txt";
 
-    //__android_log_print(ANDROID_LOG_DEBUG, "###QTOKEN 2", "Could not resolve symbol %d\n", num);
+    string test_file_12 = R"(\home\carlos\virgil\4.1.1.17\atak-civ\plugins\vintak2\app\src\main\cpp\test2.txt)";
+    string test_file_2 = R"(src/main/cpp/test.txt)";
+    string test_file_3 = R"(main/cpp/test.txt)";
+    string test_file_4 = R"(cpp/test.txt)";
+    string test_file_5 = "test.txt";
+
+    string test_file_13 = "\\home\\carlos\\virgil\\4.1.1.17\\atak-civ\\plugins\\vintak2\\app\\src\\main\\cpp\\test2.txt";
+
+    read_file_5(test_file_11);
+    usleep(1000);
+    read_file_5(test_file_12);
+    usleep(1000);
+    read_file_5(test_file_13);
+
+    //read_file_1();
+    //usleep(1000);
+    //read_file_2();
+    //usleep(1000);
+//    read_file_4(test_file_1);
+//    usleep(1000);
+//    read_file_4(test_file_2);
+//    usleep(1000);
+//    read_file_4(test_file_3);
+//    usleep(1000);
+//    read_file_4(test_file_4);
+//    usleep(1000);
+//    read_file_4(test_file_5);
+
+    //__ndk1::string addr23 = "test23";
+
+    //cout << input;
+
+    __android_log_print(ANDROID_LOG_DEBUG, "###", "The value is 23");
+
+    //Node *node = new Node();
+    //Node *node = new Node(node_port, receipt_port, addr, input);
 
     //"/home/carlos/virgil/4.1.1.17/atak-civ/plugins/vintak2/app/libs/arm64-v8a/libqtoken.so"
 

@@ -15,13 +15,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 find_library (log-lib log)
 # ------------------------------------------------ Log --
 
-# -- QToken --------------------------------------------
-add_library(qtoken SHARED IMPORTED)
-set_target_properties(qtoken PROPERTIES IMPORTED_LOCATION
-        ${PROJECT_APP}/libs/${ANDROID_ABI}/libqtoken.so
-        )
-# -------------------------------------------- QToken --
-
 # -- Include --------------------------------------------
 include_directories(${INCLUDE_DIR})
 include_directories(${INCLUDE_DIR}/aff3ct-2.3.5/aff3ct)
@@ -34,6 +27,41 @@ include_directories(${INCLUDE_DIR}/Poco/Poco)
 include_directories(${INCLUDE_DIR}/kademlia)
 
 # -------------------------------------------- Include --
+
+add_library(aff3ct SHARED IMPORTED)
+set_target_properties(aff3ct PROPERTIES IMPORTED_LOCATION
+        ${PROJECT_APP}/libs/${ANDROID_ABI}/libaff3ct-2.3.5.so
+        )
+
+add_library(config++ SHARED IMPORTED)
+set_target_properties(config++ PROPERTIES IMPORTED_LOCATION
+        ${PROJECT_APP}/libs/${ANDROID_ABI}/libconfig++.so
+        )
+
+add_library(crypto SHARED IMPORTED)
+set_target_properties(crypto PROPERTIES IMPORTED_LOCATION
+        ${PROJECT_APP}/libs/${ANDROID_ABI}/libcrypto.so
+        )
+add_library(ssl SHARED IMPORTED)
+set_target_properties(ssl PROPERTIES IMPORTED_LOCATION
+        ${PROJECT_APP}/libs/${ANDROID_ABI}/libssl.so
+        )
+
+add_library(c++_shared SHARED IMPORTED)
+set_target_properties(c++_shared PROPERTIES IMPORTED_LOCATION
+        ${PROJECT_APP}/libs/${ANDROID_ABI}/libc++_shared.so
+        )
+
+add_library(gflags_nothreads SHARED IMPORTED)
+set_target_properties(gflags_nothreads PROPERTIES IMPORTED_LOCATION
+        ${PROJECT_APP}/libs/${ANDROID_ABI}/libgflags_nothreads.so
+        )
+
+add_library(kademlia SHARED IMPORTED)
+set_target_properties(kademlia PROPERTIES IMPORTED_LOCATION
+        ${PROJECT_APP}/libs/${ANDROID_ABI}/libkademlia.so
+        )
+
 
 add_library(PocoFoundation SHARED IMPORTED)
 set_target_properties(PocoFoundation PROPERTIES IMPORTED_LOCATION
@@ -102,6 +130,14 @@ include_directories(${POCO_DIR}/Zip/include)
 #find_package(PocoRedis)
 #find_package(PocoZip)
 
+
+# -- QToken --------------------------------------------
+add_library(qtoken SHARED IMPORTED)
+set_target_properties(qtoken PROPERTIES IMPORTED_LOCATION
+        ${PROJECT_APP}/libs/${ANDROID_ABI}/libqtoken.so
+        )
+# -------------------------------------------- QToken --
+
 # -- Main Bridge ---------------------------------------
 add_library(main-bridge SHARED main-bridge.cpp)
 # --------------------------------------- Main Bridge --
@@ -120,7 +156,14 @@ target_include_directories(main-bridge PUBLIC ${INCLUDE_DIR}/Poco)
 target_link_libraries(
         main-bridge
 
-#        include/Poco/Poco/Poco
+        config++
+        crypto
+        ssl
+        c++_shared
+        gflags_nothreads
+        aff3ct
+        kademlia
+
         PocoFoundation
         PocoNet
         PocoJSON

@@ -390,7 +390,7 @@ public class PluginDropDownReceiver extends DropDownReceiver implements
                         */
                         // call cpp here for testing only
                         MainBridgeCPP bridge = new MainBridgeCPP();
-                        Log.d("###QTOKEN", "1");
+                        Log.d("###QTOKEN", "PluginDropDownReceiver");
                         bridge.load();
                         //String txt = (String) bridge.doShare();
                         //String txt = bridge.stringFromCPP();

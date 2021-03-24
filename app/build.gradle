@@ -338,8 +338,8 @@ android {
             defaultConfig.versionCode = getVersionCode()
             defaultConfig.versionName = PLUGIN_VERSION + " (" + getVersionName() + ") - [" + ATAK_VERSION + "]"
 
-            jniLibs.srcDirs = ['src/main/cpp/libs']
-            jni.srcDirs = ['src/main/cpp/libs']
+            //jniLibs.srcDirs = ['src/main/cpp/libs']
+            //jni.srcDirs = ['src/main/cpp/libs']
 
             //jni.srcDirs = ['src/main/jniLibs']
             //jniLibs.srcDirs = ['src/main/jniLibs']
