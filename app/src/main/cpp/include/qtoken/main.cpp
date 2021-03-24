@@ -87,7 +87,7 @@ int main(int argc, char* argv[]) {
         int port;
         int r_port = FLAGS_r;
         port = FLAGS_p;
-        Node node(to_string(port), to_string(r_port), bootstrap_addr, &input);
+        Node node(to_string(port), to_string(r_port), bootstrap_addr, false);
 
         // make node globally accessible
         global_node = &node;

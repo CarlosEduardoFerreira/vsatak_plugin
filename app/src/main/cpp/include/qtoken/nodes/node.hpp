@@ -11,20 +11,20 @@
 #include "Poco/Util/OptionSet.h"
 #include "Poco/Util/ServerApplication.h"
 
-#include "../coders/concurrent_decoder.hpp"
-#include "../coders/concurrent_encoder.hpp"
-#include "../coders/decoder.hpp"
-#include "../coders/encoder.hpp"
-#include "../coders/entanglement_decoder.hpp"
-#include "../coders/entanglement_encoder.hpp"
-#include "../coders/pipeline.cpp"
-#include "../coders/pipeline.hpp"
-#include "../coders/polar_decoder.hpp"
-#include "../coders/polar_encoder.hpp"
-#include "../nodes/host.hpp"
-#include "../receipt/connection_handler.hpp"
-#include "../receipt/crypto_receipt.hpp"
-#include "../receipt/receipt_session.hpp"
+#include "coders/concurrent_decoder.hpp"
+#include "coders/concurrent_encoder.hpp"
+#include "coders/decoder.hpp"
+#include "coders/encoder.hpp"
+#include "coders/entanglement_decoder.hpp"
+#include "coders/entanglement_encoder.hpp"
+#include "coders/pipeline.cpp"
+#include "coders/pipeline.hpp"
+#include "coders/polar_decoder.hpp"
+#include "coders/polar_encoder.hpp"
+#include "nodes/host.hpp"
+#include "receipt/connection_handler.hpp"
+#include "receipt/crypto_receipt.hpp"
+#include "receipt/receipt_session.hpp"
 
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -40,11 +40,8 @@ class ReceiptServer;
 class ReceiptConnectionHandler;
 
 class Node : public Host {
-    // TCP Connection Handler needs access to keys, reassess?
-    friend class ReceiptConnectionHandler;
-
 private:
-    // Keypair keypair;
+    bool is_lib;
     std::shared_ptr<kademlia::session> node;
     int node_port;
     int node_receipt_port;
@@ -77,20 +74,14 @@ public:
                                      unsigned char* private_key);
 
 public:
-    // these are made public to avoid having access errors on out of scope
-    // functions NEEDS Revisiting
-    unsigned char cipher_text[1024];
-    int cipher_text_size;
-    // unsigned char recipient_public_key[crypto_box_PUBLICKEYBYTES];
-    unsigned char recipient_message[1024];
     // overload Host constructor
     Node(const std::string& node_port, const std::string& node_receipt_port,
-         const std::string& bootstrap_addr, std::istream* input_file);
+         const std::string& bootstrap_addr, bool is_lib);
     ~Node() {}
     Chunker doGather(const std::string& receipt_file_path);
     Chunker doGather(CryptoReceipt cr);
     // Override run
-    void run() override;
+    int run() override;
 };
 
 }  // namespace Qtoken

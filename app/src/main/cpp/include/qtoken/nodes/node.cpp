@@ -3,11 +3,11 @@
 using namespace Qtoken;
 
 Node::Node(const std::string& n_p, const std::string& n_rp,
-           const std::string& add, std::istream* inp)
-    : Host(add, inp)
-    // , keypair(create_keys())
+           const std::string& add, bool is_lib)
+    : Host(add)
     , svs(std::atoi(n_rp.c_str()))
-    , acceptor(svs, reactor) {
+    , acceptor(svs, reactor)
+    , is_lib(is_lib) {
     // If bootstrap port not given, use default
     if (boot_port.empty()) {
         boot_port = std::to_string(kademlia::session_base::DEFAULT_PORT);
@@ -41,12 +41,6 @@ Node::Node(const std::string& n_p, const std::string& n_rp,
     std::ofstream pub_key_out(pub_key_path, std::ios::out | std::ios::trunc);
     std::ofstream priv_key_out(priv_key_path, std::ios::out | std::ios::trunc);
 
-    // using reinterpret is sound here as long as we do it symmetrically!
-    // pub_key_out.write(reinterpret_cast<char*>(keypair.public_key.data()),
-    // crypto_box_PUBLICKEYBYTES * 2 + 1);
-    // priv_key_out.write(reinterpret_cast<char*>(keypair.private_key.data()),
-    // crypto_box_SECRETKEYBYTES * 2 + 1);
-
     pub_key_out.close();
     priv_key_out.close();
 }
@@ -54,7 +48,7 @@ Node::Node(const std::string& n_p, const std::string& n_rp,
 /**
  * Fires up main loop. Also starts LVM socket, HTTP socket and receipt socket.
  */
-void Node::run() {
+int Node::run() {
     // setup kademlia endpoint
     kademlia::endpoint endpoint{boot_address, boot_port};
 
@@ -87,7 +81,7 @@ void Node::run() {
         } catch (const std::system_error& e) {
             std::cout << "Kademlia failed to start with error: " << std::endl;
             std::cout << e.what() << std::endl;
-            return;
+            return EXIT_FAILURE;
         }
     }
 
@@ -110,14 +104,19 @@ void Node::run() {
     // FIXME: try{}catch a std::system error here for handling failed
     // connections
 
-    printCommands();
-    processInput();
+    if (!is_lib) {
+        printCommands();
+        processInput();
 
-    // close all servers
-    node->abort();
-    reactor.stop();
+        // close all servers
+        node->abort();
+        reactor.stop();
 
-    std::cout << "main DHT loop exited!" << std::endl;
+        std::cout << "main DHT loop exited!" << std::endl;
+    } else
+        waitForTerminationRequest();
+
+    return EXIT_SUCCESS;
 }
 
 /**

@@ -8,12 +8,12 @@ using namespace std;
  * @param add Bootstrap address.
  * @param inp input stream for passing commands to the node.
  */
-Host::Host(const string& add, istream* inp) {
+Host::Host(const string& add) {
     // Consider making this address into a struct for ease of passing
     auto separatorIdx = add.find(':');
     boot_address = add.substr(0, separatorIdx);
     boot_port = add.substr(separatorIdx + 1);
-    input = inp;
+    input = &std::cin;
 }
 
 // Helpers

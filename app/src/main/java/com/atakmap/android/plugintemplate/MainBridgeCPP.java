@@ -16,14 +16,77 @@
 package com.atakmap.android.plugintemplate;
 
 
+import android.os.Environment;
 import android.util.Log;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 
 
 public class MainBridgeCPP {
 
 
+//~/dev/qtoken-cpp on  remove-sodium
+//❯ l /opt/VIN/
+//    total 36K
+//    drwxr-xr-x  5 root root 4.0K Jan 27 11:35 .
+//    drwxr-xr-x 19 root root 4.0K Mar  7 12:00 ..
+//    drwxrwxrwx  2 root root 4.0K Jan 29 17:35 keys
+//    drwxrwxrwx  2 root root  20K Mar 23 01:24 outputs
+//    drwxr-xr-x  4 root root 4.0K Jan 27 11:35 receipts
 
-    public void load() {
+
+
+
+
+
+    public void load() throws InterruptedException, FileNotFoundException {
+
+        String sdcard = Environment.getExternalStorageState();
+
+        File vinFolder = new File("/" + sdcard + "/VIN");
+        if(!vinFolder.exists()) {
+            vinFolder.mkdirs();
+        }
+
+        File vinFolderKeys = new File("/" + sdcard + "/VIN/keys");
+        if(!vinFolderKeys.exists()) {
+            vinFolderKeys.mkdirs();
+        }
+
+        File vinFolderOutputs = new File("/" + sdcard + "/VIN/outputs");
+        if(!vinFolderOutputs.exists()) {
+            vinFolderOutputs.mkdirs();
+        }
+
+        File vinFolderReceipts = new File("/" + sdcard + "/VIN/receipts");
+        if(!vinFolderReceipts.exists()) {
+            vinFolderReceipts.mkdirs();
+        }
+
+        File vinFolderLogs = new File("/" + sdcard + "/VIN/logs");
+        if(!vinFolderLogs.exists()) {
+            vinFolderLogs.mkdirs();
+        }
+
+        File vinFolderReceived = new File("/" + sdcard + "/VIN/receipts/received");
+        if(!vinFolderReceived.exists()) {
+            vinFolderReceived.mkdirs();
+        }
+
+        File vinFolderSent = new File("/" + sdcard + "/VIN/receipts/sent");
+        if(!vinFolderSent.exists()) {
+            vinFolderSent.mkdirs();
+        }
+
+        Thread.sleep(1000);
+
+        File defaults = new File(vinFolder, "defaults.cfg");
+        FileOutputStream fos = new FileOutputStream(defaults);
+
+        Thread.sleep(1000);
+
         Qtoken.run();
     }
 

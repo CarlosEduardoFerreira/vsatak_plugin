@@ -1,7 +1,7 @@
 #ifndef POLAR_FBG_H
 #define POLAR_FBG_H
 
-#include "aff3ct-2.3.5/aff3ct/aff3ct.hpp"
+#include <aff3ct/aff3ct.hpp>
 
 using namespace aff3ct;
 

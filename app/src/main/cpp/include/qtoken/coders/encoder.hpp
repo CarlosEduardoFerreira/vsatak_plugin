@@ -3,9 +3,9 @@
 
 #include <vector>
 
-#include "../receipt/crypto_receipt.hpp"
-#include "../tools/types.hpp"
-#include "../tools/utils.hpp"
+#include "receipt/crypto_receipt.hpp"
+#include "tools/types.hpp"
+#include "tools/utils.hpp"
 
 namespace Qtoken {
 

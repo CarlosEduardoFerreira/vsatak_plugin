@@ -1,7 +1,7 @@
 #ifndef BOOTSTRAP_H
 #define BOOTSTRAP_H
 
-#include "../nodes/host.hpp"
+#include "nodes/host.hpp"
 
 namespace Qtoken {
 
@@ -22,9 +22,9 @@ protected:
 
 public:
     Bootstrap(const std::string& add, std::istream* inp);
-    void run() override;
+    int run() override;
 };
 
 }  // namespace Qtoken
 
-#endif // BOOTSTRAP_H
+#endif  // BOOTSTRAP_H

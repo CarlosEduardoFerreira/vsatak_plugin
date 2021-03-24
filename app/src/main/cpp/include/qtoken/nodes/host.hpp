@@ -8,14 +8,19 @@
 #include <fstream>       //ofstream
 #include <future>
 #include <iterator>
-#include "kademlia/first_session.hpp"
-#include "kademlia/session.hpp"
+#include <kademlia/first_session.hpp>
+#include <kademlia/session.hpp>
 
-#include "../globals/globals.hpp"
-#include "../globals/logger.hpp"
-#include "../globals/strings.hpp"
-#include "../tools/chunker.hpp"
-#include "../tools/types.hpp"
+#include "Poco/Util/ServerApplication.h"
+
+#include "globals/globals.hpp"
+#include "globals/logger.hpp"
+#include "globals/strings.hpp"
+#include "tools/chunker.hpp"
+#include "tools/types.hpp"
+
+namespace P = Poco;
+namespace P_U = P::Util;
 
 namespace Qtoken {
 
@@ -28,7 +33,7 @@ namespace Qtoken {
  * database. Different types of VIN nodes will inherit from this class.
  *
  */
-class Host {
+class Host : public P_U::ServerApplication {
 protected:
     std::string boot_address;
     std::string boot_port;
@@ -38,8 +43,7 @@ protected:
     virtual void printCommands(){};
 
 public:
-    Host(const std::string& add, std::istream* inp);
-    virtual void run(){};
+    Host(const std::string& add);
 };
 
 }  // namespace Qtoken

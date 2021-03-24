@@ -145,6 +145,28 @@ void read_file_5(string file) {
 JNIEXPORT void JNICALL
 Java_com_atakmap_android_plugintemplate_Qtoken_run(JNIEnv *env, jclass clazz) {
 
+    string node_port = "8082";
+    string receipt_port = "9092";
+    string addr = "0.0.0.0:8000";
+    //istream* input = get_file_2();
+
+
+    try {
+        cfg->readFile("/sdcard/VIN/defaults.cfg");
+    } catch (const libconfig::FileIOException& fioex) {
+        std::cerr << config_io_failure << "/sdcard/VIN/defaults.cfg"
+                  << "\"" << std::endl;
+    } catch (const libconfig::ParseException& pex) {
+        std::cerr << "Parse error at " << pex.getFile() << ":" << pex.getLine()
+                  << "-" << pex.getError() << std::endl;
+    }
+
+
+    //Node *node = new Node(node_port, receipt_port, addr, reinterpret_cast<istream *>(true));
+    Node *node = new Node(node_port, receipt_port, addr, true);
+
+    //node->run();
+
 
 //    const std::string& node_port, const std::string& node_receipt_port,
 //    const std::string& bootstrap_addr, std::istream* input_file
@@ -166,30 +188,27 @@ Java_com_atakmap_android_plugintemplate_Qtoken_run(JNIEnv *env, jclass clazz) {
 
     //aprint2(std::filesystem::current_path().string());
 
-    string node_port = "8082";
-    string receipt_port = "9092";
-    string addr;
-    //istream* input = get_file_2();
 
-    string test_file_11 = "/home/carlos/virgil/4.1.1.17/atak-civ/plugins/vintak2/app/src/main/cpp/test2.txt";
-//    string test_file_2 = "src/main/cpp/test.txt";
-//    string test_file_3 = "main/cpp/test.txt";
-//    string test_file_4 = "cpp/test.txt";
+//
+//    string test_file_11 = "/home/carlos/virgil/4.1.1.17/atak-civ/plugins/vintak2/app/src/main/cpp/test2.txt";
+////    string test_file_2 = "src/main/cpp/test.txt";
+////    string test_file_3 = "main/cpp/test.txt";
+////    string test_file_4 = "cpp/test.txt";
+////    string test_file_5 = "test.txt";
+//
+//    string test_file_12 = R"(\home\carlos\virgil\4.1.1.17\atak-civ\plugins\vintak2\app\src\main\cpp\test2.txt)";
+//    string test_file_2 = R"(src/main/cpp/test.txt)";
+//    string test_file_3 = R"(main/cpp/test.txt)";
+//    string test_file_4 = R"(cpp/test.txt)";
 //    string test_file_5 = "test.txt";
-
-    string test_file_12 = R"(\home\carlos\virgil\4.1.1.17\atak-civ\plugins\vintak2\app\src\main\cpp\test2.txt)";
-    string test_file_2 = R"(src/main/cpp/test.txt)";
-    string test_file_3 = R"(main/cpp/test.txt)";
-    string test_file_4 = R"(cpp/test.txt)";
-    string test_file_5 = "test.txt";
-
-    string test_file_13 = "\\home\\carlos\\virgil\\4.1.1.17\\atak-civ\\plugins\\vintak2\\app\\src\\main\\cpp\\test2.txt";
-
-    read_file_5(test_file_11);
-    usleep(1000);
-    read_file_5(test_file_12);
-    usleep(1000);
-    read_file_5(test_file_13);
+//
+//    string test_file_13 = "\\home\\carlos\\virgil\\4.1.1.17\\atak-civ\\plugins\\vintak2\\app\\src\\main\\cpp\\test2.txt";
+//
+//    read_file_5(test_file_11);
+//    usleep(1000);
+//    read_file_5(test_file_12);
+//    usleep(1000);
+//    read_file_5(test_file_13);
 
     //read_file_1();
     //usleep(1000);

@@ -5,7 +5,7 @@
 #include <sstream>
 #include <unordered_map>
 
-#include "../tools/types.hpp"
+#include "tools/types.hpp"
 
 namespace Qtoken {
 

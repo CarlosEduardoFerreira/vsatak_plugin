@@ -17,6 +17,7 @@ find_library (log-lib log)
 
 # -- Include --------------------------------------------
 include_directories(${INCLUDE_DIR})
+include_directories(${INCLUDE_DIR}/aff3ct-2.3.5)
 include_directories(${INCLUDE_DIR}/aff3ct-2.3.5/aff3ct)
 include_directories(${INCLUDE_DIR}/aff3ct-2.3.5/MIPP)
 include_directories(${INCLUDE_DIR}/aff3ct-2.3.5/rang)
@@ -26,8 +27,19 @@ include_directories(${INCLUDE_DIR}/Poco)
 include_directories(${INCLUDE_DIR}/Poco/Poco)
 include_directories(${INCLUDE_DIR}/kademlia)
 
+include_directories(${POCO_DIR}/Foundation/include)
+include_directories(${POCO_DIR}/Net/include)
+include_directories(${POCO_DIR}/JSON/include)
+include_directories(${POCO_DIR}/XML/include)
+include_directories(${POCO_DIR}/Util/include)
+include_directories(${POCO_DIR}/Encodings/include)
+include_directories(${POCO_DIR}/Data/include)
+include_directories(${POCO_DIR}/MongoDB/include)
+include_directories(${POCO_DIR}/Redis/include)
+include_directories(${POCO_DIR}/Zip/include)
 # -------------------------------------------- Include --
 
+# -- Deps -----------------------------------------------
 add_library(aff3ct SHARED IMPORTED)
 set_target_properties(aff3ct PROPERTIES IMPORTED_LOCATION
         ${PROJECT_APP}/libs/${ANDROID_ABI}/libaff3ct-2.3.5.so
@@ -61,8 +73,9 @@ add_library(kademlia SHARED IMPORTED)
 set_target_properties(kademlia PROPERTIES IMPORTED_LOCATION
         ${PROJECT_APP}/libs/${ANDROID_ABI}/libkademlia.so
         )
+# ----------------------------------------------- Deps --
 
-
+# -- Poco -----------------------------------------------
 add_library(PocoFoundation SHARED IMPORTED)
 set_target_properties(PocoFoundation PROPERTIES IMPORTED_LOCATION
         ${PROJECT_APP}/libs/${ANDROID_ABI}/libPocoFoundation.so
@@ -103,33 +116,7 @@ add_library(PocoZip SHARED IMPORTED)
 set_target_properties(PocoZip PROPERTIES IMPORTED_LOCATION
         ${PROJECT_APP}/libs/${ANDROID_ABI}/libPocoZip.so
         )
-
-include_directories(${POCO_DIR}/Foundation/include)
-include_directories(${POCO_DIR}/Net/include)
-include_directories(${POCO_DIR}/JSON/include)
-include_directories(${POCO_DIR}/XML/include)
-include_directories(${POCO_DIR}/Util/include)
-include_directories(${POCO_DIR}/Encodings/include)
-include_directories(${POCO_DIR}/Data/include)
-include_directories(${POCO_DIR}/MongoDB/include)
-include_directories(${POCO_DIR}/Redis/include)
-include_directories(${POCO_DIR}/Zip/include)
-
-#find_package(${POCO_DIR}/build)
-
-#add_subdirectory(${POCO_DIR})
-#
-#find_package(PocoFoundation)
-#find_package(PocoNet)
-#find_package(PocoJSON)
-#find_package(PocoXML)
-#find_package(PocoUtil)
-#find_package(PocoEncodings)
-#find_package(PocoData)
-#find_package(PocoMongoDB)
-#find_package(PocoRedis)
-#find_package(PocoZip)
-
+# ----------------------------------------------- Poco --
 
 # -- QToken --------------------------------------------
 add_library(qtoken SHARED IMPORTED)
@@ -140,18 +127,8 @@ set_target_properties(qtoken PROPERTIES IMPORTED_LOCATION
 
 # -- Main Bridge ---------------------------------------
 add_library(main-bridge SHARED main-bridge.cpp)
-# --------------------------------------- Main Bridge --
 
 target_include_directories(main-bridge PUBLIC ${INCLUDE_DIR}/Poco)
-
-# -- Target ---------------------------------------------
-
-#target_link_libraries(main-bridge PocoNet PocoFoundation)
-#target_link_libraries(main-bridge PocoNetSSL PocoCrypto PocoUtil PocoNet)
-#target_link_libraries(main-bridge PocoCrypto PocoFoundation Ssl Crypto)
-#target_link_libraries(main-bridge PocoUtil PocoFoundation)
-#target_link_libraries(main-bridge PocoJSON PocoFoundation)
-#target_link_libraries(main-bridge PocoXML PocoFoundation)
 
 target_link_libraries(
         main-bridge
@@ -178,5 +155,5 @@ target_link_libraries(
         qtoken
         ${log-lib}
 )
-# --------------------------------------------- Target --
+# --------------------------------------- Main Bridge --
 

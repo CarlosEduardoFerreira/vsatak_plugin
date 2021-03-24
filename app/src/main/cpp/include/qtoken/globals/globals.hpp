@@ -1,7 +1,7 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
-#include "libconfig/libconfig.h++"
+#include <libconfig.h++>
 
 namespace Qtoken {
 

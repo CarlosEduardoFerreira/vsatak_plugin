@@ -3,8 +3,8 @@
 
 #include <unordered_map>
 
-#include "decoder.hpp"
-#include "../tools/lfsr.hpp"
+#include "coders/decoder.hpp"
+#include "tools/lfsr.hpp"
 
 namespace Qtoken {
 

@@ -12,10 +12,10 @@ using namespace Qtoken;
  * Creates a logger accessible by the logger_name given.
  * @param log_fd      Log file in which to store the logs for this logger
  * @param logger_name The name to access this logger with.
- * @param log_level   The level of logging for this logger, see include.Poco.Poco.Poco::Message
+ * @param log_level   The level of logging for this logger, see Poco::Message
  * docs for priority details. Default = 6
  * @param pattern     The pattern for the log message of this logger. See
- * include.Poco.Poco.Poco::PatternFormatter for formatting details. Default = "Year-month-day
+ * Poco::PatternFormatter for formatting details. Default = "Year-month-day
  * Hour:Minute:Second Source [priority]: Text"
  */
 void init_logger(const std::string& log_fd, const std::string& logger_name,
