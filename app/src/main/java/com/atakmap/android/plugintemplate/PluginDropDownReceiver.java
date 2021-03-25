@@ -34,6 +34,8 @@ import com.atakmap.coremap.maps.coords.GeoPoint;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -391,7 +393,11 @@ public class PluginDropDownReceiver extends DropDownReceiver implements
                         // call cpp here for testing only
                         MainBridgeCPP bridge = new MainBridgeCPP();
                         Log.d("###QTOKEN", "PluginDropDownReceiver");
-                        bridge.load();
+                        try {
+                            bridge.load();
+                        } catch (InterruptedException | IOException e) {
+                            e.printStackTrace();
+                        }
                         //String txt = (String) bridge.doShare();
                         //String txt = bridge.stringFromCPP();
 

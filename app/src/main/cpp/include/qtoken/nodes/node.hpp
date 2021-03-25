@@ -45,6 +45,7 @@ private:
     std::shared_ptr<kademlia::session> node;
     int node_port;
     int node_receipt_port;
+    libconfig::Config& cfg;
     P_N::SocketReactor reactor;
     P_N::ServerSocket svs;
     P_N::ParallelSocketAcceptor<ReceiptConnectionHandler, SocketReactor>
@@ -76,7 +77,8 @@ public:
 public:
     // overload Host constructor
     Node(const std::string& node_port, const std::string& node_receipt_port,
-         const std::string& bootstrap_addr, bool is_lib);
+         const std::string& bootstrap_addr, bool is_lib,
+         libconfig::Config& cfg);
     ~Node() {}
     Chunker doGather(const std::string& receipt_file_path);
     Chunker doGather(CryptoReceipt cr);

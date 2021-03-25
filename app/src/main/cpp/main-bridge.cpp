@@ -5,6 +5,8 @@
 #include <android/log.h>
 #include <iostream>
 #include <fstream>
+#include "include/qtoken/globals/globals.hpp"
+#include "include/qtoken/globals/logger.hpp"
 
 #include "include/qtoken/nodes/node.hpp"
 
@@ -15,131 +17,16 @@ string test_file = "test.txt";
 
 extern "C" {
 
-void aprint(const char *str) {
+#if defined(__ANDROID__)
+void QLog(const char *str) {
     __android_log_print(ANDROID_LOG_DEBUG, "###", "%s", str);
 }
-
-void aprint2(basic_string<char, char_traits<char>, allocator<char>> str) {
-    __android_log_print(ANDROID_LOG_DEBUG, "###", "%s", str.c_str());
+#else
+void QLog(const char *str) {
+    cout << str;
 }
+#endif
 
-int read_file_1() {
-    ifstream is(test_file, ifstream::binary);
-    aprint("get_file_1 1");
-    if (is) {
-        // get length of file:
-        is.seekg(0, is.end);
-        int length = is.tellg();
-        is.seekg(0, is.beg);
-
-        char *buffer = new char[length];
-
-//        cout << "Reading " << length << " characters... ";
-        aprint("get_file_1 2");
-        // read data as a block:
-        is.read(buffer, length);
-
-        if (is) {// <== this is really odd
-            aprint("get_file_1 3");
-//            cout << "all characters read successfully.";
-        } else {
-            aprint("get_file_1 4");
-//            cout << "error: only " << is.gcount() << " could be read";
-        }
-        is.close();
-
-        // ...buffer contains the entire file...
-
-        delete[] buffer;
-    }
-    aprint("get_file_1 5");
-}
-
-void read_file_2(const string& file_name) {
-    std::ifstream file(file_name);
-    aprint("read_file_2 1");
-//    if (file.is_open()) {
-        aprint("read_file_2 2");
-        std::string line;
-        while (std::getline(file, line)) {
-            aprint("read_file_2 3");
-            // using printf() in all tests for consistency
-            //printf("%s", line.c_str());
-            aprint(line.c_str());
-        }
-        file.close();
-//    }
-    aprint("read_file_2 4");
-}
-
-void read_file_3(const string& file_name) {
-    filebuf fb;
-    aprint("read_file_3 1");
-    if (fb.open (file_name,ios::in))
-    {
-        aprint("read_file_3 2");
-        istream is(&fb);
-        while (is) {
-            aprint("read_file_3 3");
-            aprint(reinterpret_cast<const char *>(char(is.get())));
-//            cout << char(is.get());
-        }
-        fb.close();
-    }
-    aprint("read_file_3 4");
-}
-
-void read_file_4(string file) {
-    try {
-        std::ifstream f(file);
-
-        //const char *txt = "read_file_4 1 (" + num + ")";
-
-        aprint("read_file_4 1");
-
-        //f.exceptions ( std::ifstream::failbit | std::ifstream::badbit );
-
-        if (f.is_open()) {
-            aprint("read_file_4 2");
-            aprint(reinterpret_cast<const char *>(f.rdbuf()));
-//        std::cout << f.rdbuf();
-        }
-
-
-        ifstream myfile;
-        myfile.open(file.c_str());
-        if (myfile.fail()) {
-            aprint("read_file_4 3");
-//        cerr << "Could not open file: " << file << endl;
-        } else {
-            aprint("read_file_4 4");
-        }
-
-    } catch (std::ios_base::failure& f) {
-        aprint(f.what());
-        //std::cerr << "Exception opening file: " << std::strerror(errno) << "\n";
-    }
-
-    aprint("read_file_4 5");
-}
-
-void read_file_5(string file) {
-    std::ifstream f(file);
-
-    //const char *txt = "read_file_4 1 (" + num + ")";
-
-    aprint("read_file_4 1");
-
-    //f.exceptions ( std::ifstream::failbit | std::ifstream::badbit );
-
-    if (f.is_open()) {
-        aprint("read_file_4 2");
-        aprint(reinterpret_cast<const char *>(f.rdbuf()));
-//        std::cout << f.rdbuf();
-    }
-
-    aprint("read_file_4 3");
-}
 
 
 JNIEXPORT void JNICALL
@@ -148,24 +35,55 @@ Java_com_atakmap_android_plugintemplate_Qtoken_run(JNIEnv *env, jclass clazz) {
     string node_port = "8082";
     string receipt_port = "9092";
     string addr = "0.0.0.0:8000";
-    //istream* input = get_file_2();
 
+    //init_logger("main_log", "GlobalLogger", 7);
+
+    QLog("###QTOKEN 1 | Start");
 
     try {
-        cfg->readFile("/sdcard/VIN/defaults.cfg");
+
+        string cfg_file = "defaults.cfg";
+
+        struct stat st = {0};
+        if (stat(cfg_file.data(), &st) == -1) {
+            QLog("###QTOKEN 2 | Cannot fond file");
+            //std::cout << "Cannot find file: " << cfg_file << std::endl;
+        }
+
+        libconfig::Config *cfg = new libconfig::Config();
+        cfg->readFile("defaults.cfg");
+
+        const libconfig::Setting& settings = cfg->getRoot();
+        const libconfig::Setting& keys = settings["file_system"]["keys"];
+
+        std::string key_path;
+        keys.lookupValue("keys_dir", key_path);
+
+        string txt = "###QTOKEN 3 | " + key_path;
+
+        QLog(txt.data());
+
+        Node *node = new Node(node_port, receipt_port, addr, true,*cfg);
+
+        //node->run();
+
     } catch (const libconfig::FileIOException& fioex) {
-        std::cerr << config_io_failure << "/sdcard/VIN/defaults.cfg"
-                  << "\"" << std::endl;
+//        std::cerr << "###QTOKEN" << config_io_failure << "/sdcard/VIN/defaults.cfg"
+//                  << "\"" << std::endl;
+        QLog("###QTOKEN 4 | FileIOException");
+
     } catch (const libconfig::ParseException& pex) {
-        std::cerr << "Parse error at " << pex.getFile() << ":" << pex.getLine()
-                  << "-" << pex.getError() << std::endl;
+//        std::cerr << "###QTOKEN" << "### Parse error at " << pex.getFile() << ":" << pex.getLine()
+//                  << "-" << pex.getError() << std::endl;
+        QLog("###QTOKEN 5 | ParseException");
+
+    } catch (...) {
+        QLog("###QTOKEN 6 | ...");
     }
 
+    QLog("###QTOKEN 7 | End");
 
-    //Node *node = new Node(node_port, receipt_port, addr, reinterpret_cast<istream *>(true));
-    Node *node = new Node(node_port, receipt_port, addr, true);
 
-    //node->run();
 
 
 //    const std::string& node_port, const std::string& node_receipt_port,

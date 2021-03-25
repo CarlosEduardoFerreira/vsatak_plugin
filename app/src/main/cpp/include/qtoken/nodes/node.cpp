@@ -3,11 +3,12 @@
 using namespace Qtoken;
 
 Node::Node(const std::string& n_p, const std::string& n_rp,
-           const std::string& add, bool is_lib)
+           const std::string& add, bool is_lib, libconfig::Config& cfg)
     : Host(add)
     , svs(std::atoi(n_rp.c_str()))
     , acceptor(svs, reactor)
-    , is_lib(is_lib) {
+    , is_lib(is_lib)
+    , cfg(cfg) {
     // If bootstrap port not given, use default
     if (boot_port.empty()) {
         boot_port = std::to_string(kademlia::session_base::DEFAULT_PORT);
@@ -23,7 +24,7 @@ Node::Node(const std::string& n_p, const std::string& n_rp,
 
     node_port = stoi(n_p);
     node_receipt_port = stoi(n_rp);
-    const libconfig::Setting& settings = cfg->getRoot();
+    const libconfig::Setting& settings = cfg.getRoot();
     const libconfig::Setting& keys = settings["file_system"]["keys"];
 
     // create keyfiles for node's priv and public keys
@@ -210,8 +211,8 @@ int Node::handleCommands(std::stringstream& input) {
 
         if (command == "share") {
             std::string receipt_dir;
-            cfg->lookupValue("file_system.receipts.receipts_sent_dir",
-                             receipt_dir);
+            cfg.lookupValue("file_system.receipts.receipts_sent_dir",
+                            receipt_dir);
 
             file_path = readArg(input);
             Poco::Logger::get("GlobalLogger")
@@ -252,8 +253,8 @@ int Node::handleCommands(std::stringstream& input) {
 
             // initialize receipt vars
             std::string receipt_dir;
-            cfg->lookupValue("file_system.receipts.receipts_sent_dir",
-                             receipt_dir);
+            cfg.lookupValue("file_system.receipts.receipts_sent_dir",
+                            receipt_dir);
 
             // Save receipt to disc with randomly generated name
             std::string save_path(receipt_dir + "CR" +
@@ -282,7 +283,7 @@ int Node::handleCommands(std::stringstream& input) {
 
             Writer w;
             std::string output_file;
-            cfg->lookupValue("file_system.general.rebuilt_fd", output_file);
+            cfg.lookupValue("file_system.general.rebuilt_fd", output_file);
             std::cout << "Loading crypto receipt..." << std::endl;
             w.second = new CryptoReceipt(receipt_file_path);
             std::cout << "Fetching shards..." << std::endl;
@@ -407,7 +408,7 @@ void Node::doPut(const std::string& key, const std::vector<char>& value) {
  * @param file_path File to spread.
  */
 CryptoReceipt Node::doSpread(const std::string& file_path) {
-    std::string chk_sz_str = cfg->lookup("chunk_size");
+    std::string chk_sz_str = cfg.lookup("chunk_size");
     if (!is_number(chk_sz_str)) {
         std::cerr << "invalid chunk size, check config file" << std::endl;
         throw("");

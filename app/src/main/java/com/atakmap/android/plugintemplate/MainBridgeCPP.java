@@ -20,8 +20,12 @@ import android.os.Environment;
 import android.util.Log;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 
 public class MainBridgeCPP {
@@ -41,56 +45,78 @@ public class MainBridgeCPP {
 
 
 
-    public void load() throws InterruptedException, FileNotFoundException {
+    public void load() throws InterruptedException, IOException {
 
-        String sdcard = Environment.getExternalStorageState();
+//        File sdcard = Environment.getExternalStorageDirectory();
 
-        File vinFolder = new File("/" + sdcard + "/VIN");
+        String sdcard = System.getenv("EXTERNAL_STORAGE");
+
+        File vinFolder = new File(sdcard + "/VIN");
         if(!vinFolder.exists()) {
             vinFolder.mkdirs();
         }
 
-        File vinFolderKeys = new File("/" + sdcard + "/VIN/keys");
+        File vinFolderKeys = new File(sdcard + "/VIN/keys");
         if(!vinFolderKeys.exists()) {
             vinFolderKeys.mkdirs();
         }
 
-        File vinFolderOutputs = new File("/" + sdcard + "/VIN/outputs");
+        File vinFolderOutputs = new File(sdcard + "/VIN/outputs");
         if(!vinFolderOutputs.exists()) {
             vinFolderOutputs.mkdirs();
         }
 
-        File vinFolderReceipts = new File("/" + sdcard + "/VIN/receipts");
+        File vinFolderReceipts = new File(sdcard + "/VIN/receipts");
         if(!vinFolderReceipts.exists()) {
             vinFolderReceipts.mkdirs();
         }
 
-        File vinFolderLogs = new File("/" + sdcard + "/VIN/logs");
+        File vinFolderLogs = new File(sdcard + "/VIN/logs");
         if(!vinFolderLogs.exists()) {
             vinFolderLogs.mkdirs();
         }
 
-        File vinFolderReceived = new File("/" + sdcard + "/VIN/receipts/received");
+        File vinFolderReceived = new File(sdcard + "/VIN/receipts/received");
         if(!vinFolderReceived.exists()) {
             vinFolderReceived.mkdirs();
         }
 
-        File vinFolderSent = new File("/" + sdcard + "/VIN/receipts/sent");
+        File vinFolderSent = new File(sdcard + "/VIN/receipts/sent");
         if(!vinFolderSent.exists()) {
             vinFolderSent.mkdirs();
         }
 
         Thread.sleep(1000);
 
-        File defaults = new File(vinFolder, "defaults.cfg");
-        FileOutputStream fos = new FileOutputStream(defaults);
+
+        //File defaults = new File(vinFolder, "defaults.cfg");
+        //FileOutputStream fos = new FileOutputStream(defaults);
+
+        //File cfg = new File("defaults.cfg");
+        //File dst = new File (vinFolder.toString() + "/defaults.cfg");
+
+//        Log.d("###", "cfg: " + cfg + " | dst: " + dst);
+
+        //copy(cfg, dst);
+
 
         Thread.sleep(1000);
 
         Qtoken.run();
     }
 
-
+    void copy(File src, File dst) throws IOException {
+        try (InputStream in = new FileInputStream(src)) {
+            try (OutputStream out = new FileOutputStream(dst)) {
+                // Transfer bytes from in to out
+                byte[] buf = new byte[1024];
+                int len;
+                while ((len = in.read(buf)) > 0) {
+                    out.write(buf, 0, len);
+                }
+            }
+        }
+    }
 
 //    static {
 //
