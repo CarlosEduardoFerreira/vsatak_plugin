@@ -5,10 +5,27 @@
 #include <android/log.h>
 #include <iostream>
 #include <fstream>
+
+#include "Poco/AutoPtr.h"
+#include "Poco/FormattingChannel.h"
+#include "Poco/Logger.h"
+#include "Poco/PatternFormatter.h"
+#include "Poco/SimpleFileChannel.h"
+
+#include "Poco/Foundation.h"
+#include "Poco/Channel.h"
+
 #include "include/qtoken/globals/globals.hpp"
 #include "include/qtoken/globals/logger.hpp"
-
 #include "include/qtoken/nodes/node.hpp"
+
+using Poco::AutoPtr;
+using Poco::FormattingChannel;
+using Poco::Logger;
+using Poco::PatternFormatter;
+using Poco::SimpleFileChannel;
+using Poco::Channel;
+using Poco::Formatter;
 
 using namespace Qtoken;
 using namespace std;
@@ -28,6 +45,31 @@ void QLog(const char *str) {
 #endif
 
 
+void init_logger_android(const std::string& log_fd, const std::string& logger_name,
+                 int log_level = Poco::Message::PRIO_INFORMATION,
+                 const std::string& pattern = "%Y-%m-%d %H:%M:%S %s [%p]: %t") {
+
+    std::string logs_dir;
+    const libconfig::Setting& settings = cfg->getRoot();
+    const libconfig::Setting& gen_cfgs = settings["file_system"]["general"];
+    gen_cfgs.lookupValue("logs_dir", logs_dir);
+    std::string full_log_fd = logs_dir + log_fd;
+    // using C code here as std::filesystem breaks android cross-compile
+    struct stat st = {0};
+    if (stat(full_log_fd.data(), &st) == -1) {
+        std::ofstream log_file(full_log_fd);
+        log_file.close();
+    }
+    AutoPtr<SimpleFileChannel> pChannel(new SimpleFileChannel);
+    AutoPtr<PatternFormatter> pPF(new PatternFormatter);
+    pPF->setProperty("pattern", "%Y-%m-%d %H:%M:%S %s [%p]: %t");
+    AutoPtr<FormattingChannel> pFC(new FormattingChannel(pPF, pChannel));
+//    pChannel->setProperty("path", full_log_fd);
+//    pChannel->setProperty("rotation",
+//                          "2 K");  // Rotate log file at 2 kilobyte size
+//    Logger::create(logger_name, pFC, log_level);
+}
+
 
 JNIEXPORT void JNICALL
 Java_com_atakmap_android_plugintemplate_Qtoken_run(JNIEnv *env, jclass clazz) {
@@ -36,22 +78,24 @@ Java_com_atakmap_android_plugintemplate_Qtoken_run(JNIEnv *env, jclass clazz) {
     string receipt_port = "9092";
     string addr = "0.0.0.0:8000";
 
-    //init_logger("main_log", "GlobalLogger", 7);
 
     QLog("###QTOKEN 1 | Start");
 
     try {
 
-        string cfg_file = "defaults.cfg";
+        string cfg_file = "/sdcard/VIN/defaults.cfg";
 
         struct stat st = {0};
         if (stat(cfg_file.data(), &st) == -1) {
-            QLog("###QTOKEN 2 | Cannot fond file");
+            QLog("###QTOKEN 2 | Cannot find the file");
             //std::cout << "Cannot find file: " << cfg_file << std::endl;
         }
+        QLog("###QTOKEN 1.1 | libconfig");
+//        libconfig::Config *cfg = new libconfig::Config();
 
-        libconfig::Config *cfg = new libconfig::Config();
-        cfg->readFile("defaults.cfg");
+        QLog("###QTOKEN 1.2 | readFile before");
+        cfg->readFile(cfg_file.c_str());
+        QLog("###QTOKEN 1.3 | readFile after");
 
         const libconfig::Setting& settings = cfg->getRoot();
         const libconfig::Setting& keys = settings["file_system"]["keys"];
@@ -63,9 +107,11 @@ Java_com_atakmap_android_plugintemplate_Qtoken_run(JNIEnv *env, jclass clazz) {
 
         QLog(txt.data());
 
+        //init_logger("main_log", "GlobalLogger", 7);
+
         Node *node = new Node(node_port, receipt_port, addr, true,*cfg);
 
-        //node->run();
+        node->run();
 
     } catch (const libconfig::FileIOException& fioex) {
 //        std::cerr << "###QTOKEN" << config_io_failure << "/sdcard/VIN/defaults.cfg"
