@@ -15,11 +15,9 @@ Node::Node(const std::string& n_p, const std::string& n_rp,
     }
 
     /* Logging */
-    Poco::Logger::get("GlobalLogger")
-        .information("VIN Node created on " + n_p +
-                     " with receipt server on port " + n_rp);
-    Poco::Logger::get("GlobalLogger")
-        .information("Node bootstrap located at " + add);
+    log_message("VIN Node created on " + n_p + " with receipt server on port " +
+                n_rp);
+    log_message("Node bootstrap located at " + add);
     /* Logging */
 
     node_port = stoi(n_p);
@@ -97,11 +95,8 @@ int Node::run() {
     }
 
     // start main loop
-    std::stringstream log;
-    log << "Running node at port " << node_port << ". Connecting to "
-        << endpoint;
-    Poco::Logger::get("GlobalLogger").information(log.str());
-    std::cout << log.str() << std::endl << std::endl;
+    log_message("Running node at port " + std::to_string(node_port) +
+                ". Connecting to " + endpoint.address());
     // FIXME: try{}catch a std::system error here for handling failed
     // connections
 
@@ -153,10 +148,7 @@ int Node::handleCommands(std::stringstream& input) {
             return 1;
         }
 
-        /* Logging */
-        Poco::Logger::get("GlobalLogger")
-            .information("Received command: " + command);
-        /* Logging */
+        log_message("Received command: " + command);
 
         if (command == "get") {
             key = readArg(input);
@@ -173,18 +165,16 @@ int Node::handleCommands(std::stringstream& input) {
                 }
                 std::cout << std::endl;
 
-                Poco::Logger::get("GlobalLogger")
-                    .information("Get successful.");
-                Poco::Logger::get("GlobalLogger").debug("Key: " + key);
-                Poco::Logger::get("GlobalLogger")
-                    .debug("Value: " + std::string(buff_channel.begin(),
-                                                   buff_channel.end()));
+                log_message("Get successful.");
+                log_message("Key: " + key);  // debug
+                log_message("Value: " +
+                            std::string(buff_channel.begin(),
+                                        buff_channel.end()));  // debug
 
             } else {
                 std::cout << "nothing to print" << std::endl;
 
-                Poco::Logger::get("GlobalLogger")
-                    .information("Get failed:shard empty");
+                log_message("Get failed:shard empty");
             }
 
             return 1;
@@ -195,16 +185,15 @@ int Node::handleCommands(std::stringstream& input) {
             value = readArg(input);
             if (key == "" || value == "") {
                 std::cerr << "no k/v specified" << std::endl;
-                Poco::Logger::get("GlobalLogger")
-                    .information("Put failed:no input");
-                throw("");
+                log_message("Put failed:no input");
+                return 1;
             }
             std::vector<char> v(value.begin(), value.end());
             doPut(key, v);
 
-            Poco::Logger::get("GlobalLogger").information("Put successful.");
-            Poco::Logger::get("GlobalLogger").debug("Key: " + key);
-            Poco::Logger::get("GlobalLogger").debug("Value: " + value);
+            log_message("Put successful.");
+            log_message("Key: " + key);      // debug
+            log_message("Value: " + value);  // debug
 
             return 1;
         }
@@ -215,17 +204,14 @@ int Node::handleCommands(std::stringstream& input) {
                             receipt_dir);
 
             file_path = readArg(input);
-            Poco::Logger::get("GlobalLogger")
-                .information("Share with input:" + file_path);
+            log_message("Share with input:" + file_path);
             peer_ip = readArg(input);
-            Poco::Logger::get("GlobalLogger")
-                .information("Share with peer_ip:" + peer_ip);
+            log_message("Share with peer_ip:" + peer_ip);
             peer_port = readArg(input);
-            Poco::Logger::get("GlobalLogger")
-                .information("Share with peer_port:" + peer_port);
+            log_message("Share with peer_port:" + peer_port);
 
             if (stat(file_path.data(), &st) == -1) {
-                std::cout << "Cannot find file: " << file_path << std::endl;
+                log_message("Cannot find file: " + file_path);
                 return 1;
             }
 
@@ -244,8 +230,7 @@ int Node::handleCommands(std::stringstream& input) {
 
             if (stat(file_path.data(), &st) == -1) {
                 std::cout << "Cannot find file: " << file_path << std::endl;
-                Poco::Logger::get("GlobalLogger")
-                    .information("Spread failed:bad file path");
+                log_message("Spread failed:bad file path");
                 return 1;
             }
 
@@ -260,12 +245,11 @@ int Node::handleCommands(std::stringstream& input) {
             std::string save_path(receipt_dir + "CR" +
                                   std::to_string(get_rand_seed_uint32_t()));
             cr.save(save_path);
-            Poco::Logger::get("GlobalLogger")
-                .debug("Receipt saved to:" + save_path);
+            log_message("Receipt saved to:" + save_path);
             std::cout << "Receipt path: " << save_path << std::endl;
 
             std::cout << "Spread successfull!" << std::endl;
-            Poco::Logger::get("GlobalLogger").information("Spread successful.");
+            log_message("Spread successful.");
 
             return 1;
         }
@@ -276,8 +260,7 @@ int Node::handleCommands(std::stringstream& input) {
             if (stat(receipt_file_path.data(), &st) == -1) {
                 std::cout << "Cannot find receipt: " << receipt_file_path
                           << std::endl;
-                Poco::Logger::get("GlobalLogger")
-                    .information("Gather failed:bad file path");
+                log_message("Gather failed:bad file path");
                 return 1;
             }
 
@@ -290,8 +273,7 @@ int Node::handleCommands(std::stringstream& input) {
             auto ch = doGather(*w.second);
             if (ch.get_file_size() == 0) {
                 std::cout << "Bad receipt" << std::endl;
-                Poco::Logger::get("GlobalLogger")
-                    .information("Gather failed:file empty");
+                log_message("Gather failed:file empty");
                 delete w.second;
                 return 1;
             }
@@ -308,7 +290,7 @@ int Node::handleCommands(std::stringstream& input) {
             w.first->rebuild(output_file +
                              std::to_string(get_rand_seed_uint32_t()));
 
-            Poco::Logger::get("GlobalLogger").information("Gather successful.");
+            log_message("Gather successful.");
 
             delete w.second;
             return 1;

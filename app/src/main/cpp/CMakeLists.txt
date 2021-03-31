@@ -22,7 +22,6 @@ include_directories(${INCLUDE_DIR}/aff3ct-2.3.5/aff3ct)
 include_directories(${INCLUDE_DIR}/aff3ct-2.3.5/MIPP)
 include_directories(${INCLUDE_DIR}/aff3ct-2.3.5/rang)
 include_directories(${INCLUDE_DIR}/libconfig)
-include_directories(${INCLUDE_DIR}/qtoken)
 include_directories(${INCLUDE_DIR}/kademlia)
 
 include_directories(${POCO_DIR})
@@ -41,6 +40,8 @@ include_directories(${POCO_DIR}/Crypto)
 include_directories(${POCO_DIR}/DOM)
 include_directories(${POCO_DIR}/Dynamic)
 include_directories(${POCO_DIR}/SAX)
+
+include_directories(${INCLUDE_DIR}/qtoken)
 
 #include_directories(${POCO_DIR}/Foundation/include)
 #include_directories(${POCO_DIR}/Net/include)

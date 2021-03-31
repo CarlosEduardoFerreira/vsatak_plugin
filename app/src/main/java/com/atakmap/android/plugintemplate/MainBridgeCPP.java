@@ -45,7 +45,7 @@ public class MainBridgeCPP {
 
 
 
-    public void load() throws InterruptedException, IOException {
+    public void run() throws InterruptedException, IOException {
 
 //        File sdcard = Environment.getExternalStorageDirectory();
 
@@ -102,7 +102,24 @@ public class MainBridgeCPP {
 
         Thread.sleep(1000);
 
+
         Qtoken.run();
+    }
+
+    public void put() {
+        Qtoken.put();
+    }
+
+    public void share() {
+        Qtoken.share();
+    }
+
+    public void spread() {
+        Qtoken.spread();
+    }
+
+    public void gather() {
+        Qtoken.gather();
     }
 
     void copy(File src, File dst) throws IOException {

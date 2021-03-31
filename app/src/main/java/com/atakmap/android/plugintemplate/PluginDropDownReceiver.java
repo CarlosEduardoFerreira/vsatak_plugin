@@ -90,267 +90,75 @@ public class PluginDropDownReceiver extends DropDownReceiver implements
         downloadMarkersAndUpdateListView();
 
 
-        // Add Marker - Upload new Point
+        // RUN
         final ImageButton addButton = templateView.findViewById(R.id.add_point);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                setTitleText();
-
-                // Create a Marker
-                final Marker m = setupMarker();
-                String uid = m.getUID();
-                double latitude = m.getPoint().getLatitude();
-                double longitude = m.getPoint().getLongitude();
-                Log.i("Sal", "latitude: " + latitude + " | longitude: " + longitude);
-
-                addMarkerToTheMap(m);
-                markers.add(m);
-                updateListViewMarkers(listViewMarkers, markers.size() == 1);
-
-                // Send to API
-                try {
-                    JSONObject jsonObj = new JSONObject();
-                    jsonObj.put("uid", uid);
-                    jsonObj.put("latitude", latitude);
-                    jsonObj.put("longitude", longitude);
-
-                    // Send Marker to the API
-                    PluginApi.insertMarker(jsonObj, new PluginApi.Callback() {
-                        public void onResultReceived(JSONObject result) throws JSONException {
-                            noErrorToast(result.getString("error"), "New Marker added.");
-                        }
-                    });
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                new Thread( new Runnable() { @Override public void run() {
+                    MainBridgeCPP bridge = new MainBridgeCPP();
+                    Log.d("###QTOKEN", "PluginDropDownReceiver run");
+                    try {
+                        bridge.run();
+                    } catch (InterruptedException | IOException e) {
+                        e.printStackTrace();
+                    }
+                } } ).start();
             }
         });
 
 
-        // Get Point - Download Point by UID
+        // PUT
         final ImageButton downloadButton = templateView.findViewById(R.id.add_uid);
         downloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    checkConnection(new PluginApi.Callback() {
-                        public void onResultReceived(JSONObject result) throws JSONException {
-
-                            if (noErrorToast(result.getString("error"), "")) {
-
-                                final AlertDialog.Builder builder = new AlertDialog.Builder(PluginTemplateLifecycle.mainActivity);
-                                builder.setTitle("Point Name");
-
-                                // Setup TextView
-                                final EditText input = new EditText(context);
-                                int maxLength = 6;
-                                InputFilter[] fArray = new InputFilter[1];
-                                fArray[0] = new InputFilter.LengthFilter(maxLength);
-                                input.setFilters(fArray);
-                                input.setInputType(InputType.TYPE_CLASS_TEXT);
-                                builder.setView(input);
-
-                                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        final String uid = input.getText().toString();
-                                        if (uid.length() != 6) {
-                                            Toast.makeText(mainContext,
-                                                    "Point Name does not have 6 characters.",
-                                                    Toast.LENGTH_LONG).show();
-                                        } else {
-                                            try {
-                                                PluginApi.getMarker(uid, new PluginApi.Callback() {
-                                                    public void onResultReceived(JSONObject result) throws JSONException {
-
-                                                        if(result.has("uid")) {
-
-                                                            // Show only the selected marker at the map
-                                                            cleanupMap();
-                                                            String juid = result.getString("uid");
-                                                            double latitude = result.getDouble("latitude");
-                                                            double longitude = result.getDouble("longitude");
-                                                            setMarker(juid, latitude, longitude);
-
-                                                            // Remove not selected markers from the ListView
-                                                            for (int i = markers.size() - 1; i >= 0; i--) {
-                                                                Log.d("VINTAK", "markers.get(i).getUID(): " +
-                                                                        markers.get(i).getUID() + " | juid: " + juid);
-                                                                if (!markers.get(i).getUID().equals(juid)) {
-                                                                    markers.remove(markers.get(i));
-                                                                }
-                                                            }
-                                                            updateListViewMarkers(listViewMarkers, false);
-
-                                                        } else {
-                                                            String txt = "ID not found. (" + uid + ")";
-                                                            Toast.makeText(context, txt, Toast.LENGTH_SHORT).show();
-                                                        }
-
-                                                    }
-                                                });
-                                            } catch (JSONException e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    }
-                                });
-                                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.cancel();
-                                    }
-                                });
-
-                                // Loading at main Thread
-                                Handler mainHandler = new Handler(Looper.getMainLooper());
-                                Runnable myRunnable = new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        builder.show();
-                                    }
-                                };
-                                mainHandler.post(myRunnable);
-                            }
-                        }
-                    });
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                new Thread( new Runnable() { @Override public void run() {
+                    MainBridgeCPP bridge = new MainBridgeCPP();
+                    Log.d("###QTOKEN", "PluginDropDownReceiver put");
+                    bridge.put();
+                } } ).start();
             }
         });
 
 
-        // List Markers - Download all Points
+        // SHARE
         final ImageButton listButton = templateView.findViewById(R.id.list_markers);
         listButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    downloadMarkersAndUpdateListView();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
+                new Thread( new Runnable() { @Override public void run() {
+                    MainBridgeCPP bridge = new MainBridgeCPP();
+                    Log.d("###QTOKEN", "PluginDropDownReceiver share");
+                    bridge.share();
+                } } ).start();
             }
         });
 
 
-        // Delete all Points
+        // SPREAD
         clearButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
-                    checkConnection(new PluginApi.Callback() {
-                        public void onResultReceived(JSONObject result) throws JSONException {
-                            if (noErrorToast(result.getString("error"), "")) {
-
-                                final AlertDialog.Builder builder = new AlertDialog.Builder(PluginTemplateLifecycle.mainActivity);
-                                builder.setTitle("Are you sure you want to DELETE all Points?");
-
-                                builder.setPositiveButton("Yes, I am.", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-
-                                        PluginApi.deleteMarkers(new PluginApi.Callback() {
-                                            public void onResultReceived(JSONObject result) throws JSONException {
-                                                if (noErrorToast(result.getString("error"), "")) {
-                                                    getMapView().getRootGroup().findMapGroup(GROUP_NAME).clearItems();
-
-                                                    Handler mainHandler = new Handler(Looper.getMainLooper());
-                                                    Runnable myRunnable = new Runnable() {
-                                                        @Override
-                                                        public void run() {
-                                                            markers = new ArrayList<Marker>();
-                                                            updateListViewMarkers(listViewMarkers, true);
-                                                        }
-                                                    };
-                                                    mainHandler.post(myRunnable);
-                                                }
-                                            }
-                                        });
-                                    }
-                                });
-                                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.cancel();
-                                    }
-                                });
-
-                                // Loading at main Thread
-                                Handler mainHandler = new Handler(Looper.getMainLooper());
-                                Runnable myRunnable = new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        builder.show();
-                                    }
-                                };
-                                mainHandler.post(myRunnable);
-                            }
-                        }
-                    });
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
+                new Thread( new Runnable() { @Override public void run() {
+                    MainBridgeCPP bridge = new MainBridgeCPP();
+                    Log.d("###QTOKEN", "PluginDropDownReceiver Spread");
+                    bridge.spread();
+                } } ).start();
             }
         });
 
 
-        // Settings
+        // GATHER
         final ImageButton settingsButton = templateView.findViewById(R.id.settings);
-
         settingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final AlertDialog.Builder builder = new AlertDialog.Builder(mainContext);
-                builder.setTitle("Server IP Address");
-
-                final EditText input = new EditText(context);
-                input.setInputType(InputType.TYPE_CLASS_TEXT);
-                input.setText(PluginApi.API_URL);
-                builder.setView(input);
-
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        final String ip = input.getText().toString();
-                        PluginApi.API_URL = ip;
-                        Log.i("CarlFerr 2", "PluginApi.API_URL: " + PluginApi.API_URL);
-                        try {
-                            checkConnection(new PluginApi.Callback() {
-                                public void onResultReceived(JSONObject result) throws JSONException {
-                                    if (!noErrorToast(result.getString("error"), result.getString("success"))) {
-                                        settingsButton.performClick();
-                                    } else {
-                                        noErrorToast("", "Connection OK");
-                                    }
-                                }
-                            });
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-                // Loading at main Thread
-                Handler mainHandler = new Handler(Looper.getMainLooper());
-                Runnable myRunnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        builder.show();
-                    }
-                };
-                mainHandler.post(myRunnable);
+                new Thread( new Runnable() { @Override public void run() {
+                    MainBridgeCPP bridge = new MainBridgeCPP();
+                    Log.d("###QTOKEN", "PluginDropDownReceiver Gather");
+                    bridge.gather();
+                } } ).start();
             }
         });
 
@@ -391,13 +199,13 @@ public class PluginDropDownReceiver extends DropDownReceiver implements
                         setMarker(m.getUID(), m.getPoint().getLatitude(), m.getPoint().getLongitude());
                         */
                         // call cpp here for testing only
-                        MainBridgeCPP bridge = new MainBridgeCPP();
-                        Log.d("###QTOKEN", "PluginDropDownReceiver");
-                        try {
-                            bridge.load();
-                        } catch (InterruptedException | IOException e) {
-                            e.printStackTrace();
-                        }
+
+                        new Thread( new Runnable() { @Override public void run() {
+                            MainBridgeCPP bridge = new MainBridgeCPP();
+                                Log.d("###QTOKEN", "PluginDropDownReceiver put");
+                                    bridge.put();
+                        } } ).start();
+
                         //String txt = (String) bridge.doShare();
                         //String txt = bridge.stringFromCPP();
 

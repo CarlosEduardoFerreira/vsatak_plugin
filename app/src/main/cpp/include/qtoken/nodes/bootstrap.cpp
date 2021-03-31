@@ -12,25 +12,14 @@ int Bootstrap::run() {
     auto main_loop_result =
         async(std::launch::async, &kademlia::first_session::run, firstNode);
 
-    /* Logging */
-    std::stringstream log;
-    log << "Starting Bootstrap node DHT at port " << boot_port;
-    Poco::Logger::get("GlobalLogger").information(log.str());
-    std::cout << log.str() << std::endl;
-    std::cout << std::endl << std::endl;
-    /* Logging */
+    log_message("Starting Bootstrap node DHT at port " + boot_port);
 
     printCommands();
 
     processInput();
 
-    /* Logging */
-    std::cout << "finishing..." << std::endl;
-    log.str(std::string());
-    log << "Exiting VIN Bootstrap node at " << boot_address
-        << "::" << boot_port;
-    Poco::Logger::get("GlobalLogger").information(log.str());
-    /* Logging */
+    log_message("Exiting VIN Bootstrap node at " + boot_address + ":" +
+                boot_port);
 
     firstNode->abort();
     main_loop_result.get();
@@ -59,10 +48,7 @@ int Bootstrap::handleCommands(std::stringstream& command_line) {
             std::cout << "\r";
             return 1;
         }
-        /* Logging */
-        Poco::Logger::get("GlobalLogger")
-            .information("Received command: " + command);
-        /* Logging */
+        log_message("Received command: " + command);
 
         if (command == "exit") {
             std::cout << "exiting..." << std::endl;

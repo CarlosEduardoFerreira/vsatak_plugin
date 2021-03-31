@@ -1,21 +1,22 @@
 #ifndef CONNECTION_HANDLER_H
 #define CONNECTION_HANDLER_H
 
-#include <libconfig.h++>
 #include <functional>
 #include <iostream>
+#include <libconfig.h++>
 
-#include "Poco/Net/SocketNotification.h"
-#include "Poco/Util/ServerApplication.h"
-#include "Poco/Net/SocketReactor.h"
+#include "Poco/Exception.h"
+#include "Poco/NObserver.h"
 #include "Poco/Net/NetException.h"
+#include "Poco/Net/SocketNotification.h"
+#include "Poco/Net/SocketReactor.h"
 #include "Poco/Net/SocketStream.h"
 #include "Poco/Net/StreamSocket.h"
-#include "Poco/NObserver.h"
-#include "Poco/Exception.h"
 #include "Poco/Thread.h"
+#include "Poco/Util/ServerApplication.h"
 
 #include "globals/globals.hpp"
+#include "globals/logger.hpp"
 #include "nodes/node.hpp"
 
 namespace P = Poco;
@@ -56,4 +57,4 @@ private:
 
 }  // namespace Qtoken
 
-#endif // CONNECTION_HANDLER_H
+#endif  // CONNECTION_HANDLER_H

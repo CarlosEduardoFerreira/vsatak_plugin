@@ -18,6 +18,7 @@
 #include "include/qtoken/globals/globals.hpp"
 #include "include/qtoken/globals/logger.hpp"
 #include "include/qtoken/nodes/node.hpp"
+#include "include/qtoken/receipt/crypto_receipt.hpp"
 
 using Poco::AutoPtr;
 using Poco::FormattingChannel;
@@ -32,54 +33,16 @@ using namespace std;
 
 string test_file = "test.txt";
 
+Node *node;
+
 extern "C" {
-
-#if defined(__ANDROID__)
-void QLog(const char *str) {
-    __android_log_print(ANDROID_LOG_DEBUG, "###", "%s", str);
-}
-#else
-void QLog(const char *str) {
-    cout << str;
-}
-#endif
-
-
-void init_logger_android(const std::string& log_fd, const std::string& logger_name,
-                 int log_level = Poco::Message::PRIO_INFORMATION,
-                 const std::string& pattern = "%Y-%m-%d %H:%M:%S %s [%p]: %t") {
-
-    std::string logs_dir;
-    const libconfig::Setting& settings = cfg->getRoot();
-    const libconfig::Setting& gen_cfgs = settings["file_system"]["general"];
-    gen_cfgs.lookupValue("logs_dir", logs_dir);
-    std::string full_log_fd = logs_dir + log_fd;
-    // using C code here as std::filesystem breaks android cross-compile
-    struct stat st = {0};
-    if (stat(full_log_fd.data(), &st) == -1) {
-        std::ofstream log_file(full_log_fd);
-        log_file.close();
-    }
-    AutoPtr<SimpleFileChannel> pChannel(new SimpleFileChannel);
-    AutoPtr<PatternFormatter> pPF(new PatternFormatter);
-    pPF->setProperty("pattern", "%Y-%m-%d %H:%M:%S %s [%p]: %t");
-    AutoPtr<FormattingChannel> pFC(new FormattingChannel(pPF, pChannel));
-//    pChannel->setProperty("path", full_log_fd);
-//    pChannel->setProperty("rotation",
-//                          "2 K");  // Rotate log file at 2 kilobyte size
-//    Logger::create(logger_name, pFC, log_level);
-}
-
 
 JNIEXPORT void JNICALL
 Java_com_atakmap_android_plugintemplate_Qtoken_run(JNIEnv *env, jclass clazz) {
 
     string node_port = "8082";
     string receipt_port = "9092";
-    string addr = "0.0.0.0:8000";
-
-
-    QLog("###QTOKEN 1 | Start");
+    string addr = "192.168.1.10:8000";
 
     try {
 
@@ -87,15 +50,15 @@ Java_com_atakmap_android_plugintemplate_Qtoken_run(JNIEnv *env, jclass clazz) {
 
         struct stat st = {0};
         if (stat(cfg_file.data(), &st) == -1) {
-            QLog("###QTOKEN 2 | Cannot find the file");
+            log_message("###QTOKEN 2 | Cannot find the file");
             //std::cout << "Cannot find file: " << cfg_file << std::endl;
         }
-        QLog("###QTOKEN 1.1 | libconfig");
+        log_message("###QTOKEN 1.1 | libconfig");
 //        libconfig::Config *cfg = new libconfig::Config();
 
-        QLog("###QTOKEN 1.2 | readFile before");
+        log_message("###QTOKEN 1.2 | readFile before");
         cfg->readFile(cfg_file.c_str());
-        QLog("###QTOKEN 1.3 | readFile after");
+        log_message("###QTOKEN 1.3 | readFile after");
 
         const libconfig::Setting& settings = cfg->getRoot();
         const libconfig::Setting& keys = settings["file_system"]["keys"];
@@ -105,32 +68,106 @@ Java_com_atakmap_android_plugintemplate_Qtoken_run(JNIEnv *env, jclass clazz) {
 
         string txt = "###QTOKEN 3 | " + key_path;
 
-        QLog(txt.data());
+        log_message(txt.data());
+
+        node = new Node(node_port, receipt_port, addr, true, *cfg);
+
+        log_message("###QTOKEN  | run before");
+        node->run();
+        log_message("###QTOKEN  | run after");
+
+    } catch (...) {
+        log_message("###QTOKEN 6 | ...");
+    }
+}
+
+
+
+
+
+JNIEXPORT void JNICALL
+Java_com_atakmap_android_plugintemplate_Qtoken_put(JNIEnv *env, jclass clazz) {
+
+
+    log_message("###QTOKEN 1 | Start");
+
+    try {
 
         //init_logger("main_log", "GlobalLogger", 7);
 
-        Node *node = new Node(node_port, receipt_port, addr, true,*cfg);
+        std::string k = "Hello";
+        std::string v = "World";
+        std::vector vec(v.begin(), v.end());
 
-        node->run();
+        log_message("###QTOKEN  | put before");
+        node->doPut(k, vec);
+        log_message("###QTOKEN  | put after");
 
-    } catch (const libconfig::FileIOException& fioex) {
+    } catch (const libconfig::FileIOException &fioex) {
 //        std::cerr << "###QTOKEN" << config_io_failure << "/sdcard/VIN/defaults.cfg"
 //                  << "\"" << std::endl;
-        QLog("###QTOKEN 4 | FileIOException");
+        log_message("###QTOKEN 4 | FileIOException");
 
-    } catch (const libconfig::ParseException& pex) {
+    } catch (const libconfig::ParseException &pex) {
 //        std::cerr << "###QTOKEN" << "### Parse error at " << pex.getFile() << ":" << pex.getLine()
 //                  << "-" << pex.getError() << std::endl;
-        QLog("###QTOKEN 5 | ParseException");
+        log_message("###QTOKEN 5 | ParseException");
 
     } catch (...) {
-        QLog("###QTOKEN 6 | ...");
+        log_message("###QTOKEN 6 | ...");
     }
 
-    QLog("###QTOKEN 7 | End");
+    log_message("###QTOKEN 7 | End");
 
 
+}
 
+
+JNIEXPORT void JNICALL // spread and gather
+Java_com_atakmap_android_plugintemplate_Qtoken_share(JNIEnv *env, jclass clazz) {
+
+    log_message("###QTOKEN | Share Start");
+
+    string test_file_5 = "/sdcard/test.txt";
+
+    log_message("###QTOKEN | Share before");
+    node->doShare(test_file_5, "192.168.1.10", "9091");
+    log_message("###QTOKEN | Share after");
+
+
+}
+
+
+JNIEXPORT void JNICALL // calls put
+Java_com_atakmap_android_plugintemplate_Qtoken_spread(JNIEnv *env, jclass clazz) {
+
+    log_message("###QTOKEN | Spread Start");
+
+    string test_file = "/sdcard/test.txt";
+
+    log_message("###QTOKEN | Spread before");
+    auto receipt = node->doSpread(test_file);
+    log_message("###QTOKEN | " + receipt.serialize().str());
+    receipt.save("/sdcard/VIN/receipts/sent/test.txt");
+    log_message("###QTOKEN | Spread after");
+
+}
+
+
+JNIEXPORT void JNICALL // calls get
+Java_com_atakmap_android_plugintemplate_Qtoken_gather(JNIEnv *env, jclass clazz) {
+
+    log_message("###QTOKEN | Gather Start");
+
+    string test_file = "/sdcard/VIN/receipts/sent/test.txt";
+
+    log_message("###QTOKEN | Gather before");
+    auto ch = node->doGather(test_file);
+    ch.rebuild("/sdcard/VIN/outputs/test.txt");
+
+    log_message("###QTOKEN | Gather after");
+
+}
 
 //    const std::string& node_port, const std::string& node_receipt_port,
 //    const std::string& bootstrap_addr, std::istream* input_file
@@ -159,129 +196,7 @@ Java_com_atakmap_android_plugintemplate_Qtoken_run(JNIEnv *env, jclass clazz) {
 ////    string test_file_3 = "main/cpp/test.txt";
 ////    string test_file_4 = "cpp/test.txt";
 ////    string test_file_5 = "test.txt";
-//
-//    string test_file_12 = R"(\home\carlos\virgil\4.1.1.17\atak-civ\plugins\vintak2\app\src\main\cpp\test2.txt)";
-//    string test_file_2 = R"(src/main/cpp/test.txt)";
-//    string test_file_3 = R"(main/cpp/test.txt)";
-//    string test_file_4 = R"(cpp/test.txt)";
-//    string test_file_5 = "test.txt";
-//
-//    string test_file_13 = "\\home\\carlos\\virgil\\4.1.1.17\\atak-civ\\plugins\\vintak2\\app\\src\\main\\cpp\\test2.txt";
-//
-//    read_file_5(test_file_11);
-//    usleep(1000);
-//    read_file_5(test_file_12);
-//    usleep(1000);
-//    read_file_5(test_file_13);
 
-    //read_file_1();
-    //usleep(1000);
-    //read_file_2();
-    //usleep(1000);
-//    read_file_4(test_file_1);
-//    usleep(1000);
-//    read_file_4(test_file_2);
-//    usleep(1000);
-//    read_file_4(test_file_3);
-//    usleep(1000);
-//    read_file_4(test_file_4);
-//    usleep(1000);
-//    read_file_4(test_file_5);
-
-    //__ndk1::string addr23 = "test23";
-
-    //cout << input;
-
-    __android_log_print(ANDROID_LOG_DEBUG, "###", "The value is 23");
-
-    //Node *node = new Node();
-    //Node *node = new Node(node_port, receipt_port, addr, input);
-
-    //"/home/carlos/virgil/4.1.1.17/atak-civ/plugins/vintak2/app/libs/arm64-v8a/libqtoken.so"
-
-//    void* dlh = dlopen("libqtoken.so", RTLD_NOW | RTLD_GLOBAL);
-//    char *dl_error = dlerror();
-//    if(dl_error != nullptr) {
-//        std::cerr << "###QTOKEN - Caught an error while opening shared library: " << dl_error << std::endl;
-//    }
-//
-//    dlsym(dlh, "run");
-
-    //dlsym(dlh, "doShare");
-
-}
-
-//
-//    JNIEXPORT jstring JNICALL Java_com_atakmap_android_plugintemplate_MainBridgeCPP_stringFromCPP(JNIEnv* env, jobject thiz )
-//    {
-//
-//        return env->NewStringUTF("Hi from CPP");
-//    }
-//
-//    JNIEXPORT void JNICALL Java_com_atakmap_android_plugintemplate_MainBridgeCPP_run(JNIEnv* env, jobject thiz )
-//    {
-//
-////        void* libqtoken = dlopen("libqtoken.so", RTLD_LAZY | RTLD_GLOBAL);
-////        char *err = dlerror();
-////        if (err) {
-////            printf("###QTOKEN - Could not resolve symbol: %s\n", err);
-//
-//
-////        }
-//
-//        int num = 1;
-//
-//        __android_log_print(ANDROID_LOG_DEBUG, "###QTOKEN 2", "Could not resolve symbol %d\n", num);
-//
-//        void* dlh = dlopen("libqtoken.so", RTLD_NOW | RTLD_GLOBAL);
-//        char *dl_error = dlerror();
-//        if(dl_error != nullptr) {
-//            std::cerr << "###QTOKEN - Caught an error while opening shared library: " << dl_error << std::endl;
-//        }
-//
-////        if (!dlh)
-////        { fprintf(stderr, "###QTOKEN - dlopen failed: %s\n", dlerror());
-////            exit(EXIT_FAILURE); };
-//
-//        dlsym(dlh, "run");
-//        dlsym(dlh, "doShare");
-//
-//
-//    }
-
-//    JNIEXPORT jobject JNICALL Java_com_atakmap_android_plugintemplate_MainBridgeCPP_doShare(JNIEnv* env, jobject thiz )
-//    {
-//        typedef void (*do_share_t)();
-//
-//        // std::string app_path = "/home/carlos/virgil/4.1.1.17/atak-civ/plugins/vintak2/app";
-//        // const char *libqtoken = app_path + "/libs/arm64-v8a/libqtoken.so";
-//
-//        //Node node = Node.run();
-//
-//        //LOGD("###QTOKEN - 1");
-//
-//        void* libqtoken = dlopen("libqtoken.so", RTLD_LAZY | RTLD_GLOBAL);
-//        char *dl_error = dlerror();
-//        if(dl_error != nullptr) {
-//            std::cerr << "###QTOKEN - Caught an error while opening shared library: " << dl_error << std::endl;
-//        }
-//
-////        auto do_share = dlsym(libqtoken, "doShare");
-////        char *err = dlerror();
-////        if (err) {
-////            printf("###QTOKEN - Could not resolve symbol: %s\n", err);
-////        }
-//
-//        //printf("Plugin object returned: %c\n", do_share());
-//
-//    }
-
-
-//
-//
-//    JNIEXPORT int JNICALL Java_com_atakmap_android_plugintemplate_MainBridgeCPP_main(JNIEnv *env, jobject thiz) {
-//        return 23;
-//    }
 
 
 /*

@@ -1,6 +1,7 @@
 #ifndef BOOTSTRAP_H
 #define BOOTSTRAP_H
 
+#include "globals/logger.hpp"
 #include "nodes/host.hpp"
 
 namespace Qtoken {
