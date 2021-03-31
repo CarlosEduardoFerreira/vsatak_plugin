@@ -23,6 +23,8 @@ public class Qtoken  {
 
     public static native void put();
 
+    public static native void get();
+
     public static native void share();
 
     public static native void spread();

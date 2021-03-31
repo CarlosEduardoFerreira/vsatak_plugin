@@ -110,6 +110,10 @@ public class MainBridgeCPP {
         Qtoken.put();
     }
 
+    public void get() {
+        Qtoken.get();
+    }
+
     public void share() {
         Qtoken.share();
     }
@@ -121,6 +125,7 @@ public class MainBridgeCPP {
     public void gather() {
         Qtoken.gather();
     }
+
 
     void copy(File src, File dst) throws IOException {
         try (InputStream in = new FileInputStream(src)) {

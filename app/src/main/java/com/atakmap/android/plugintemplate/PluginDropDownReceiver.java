@@ -78,7 +78,6 @@ public class PluginDropDownReceiver extends DropDownReceiver implements
         super(mapView);
 
         templateView = PluginLayoutInflater.inflate(context, R.layout.main_layout, null);
-        final ImageButton clearButton = templateView.findViewById(R.id.clear_points);
         final ListView listViewMarkers = templateView.findViewById(R.id.list_view_markers);
 
         SharedPreferences prefs = mainContext.getSharedPreferences("server", MODE_PRIVATE);
@@ -91,7 +90,7 @@ public class PluginDropDownReceiver extends DropDownReceiver implements
 
 
         // RUN
-        final ImageButton addButton = templateView.findViewById(R.id.add_point);
+        final ImageButton addButton = templateView.findViewById(R.id.qrun);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -109,7 +108,7 @@ public class PluginDropDownReceiver extends DropDownReceiver implements
 
 
         // PUT
-        final ImageButton downloadButton = templateView.findViewById(R.id.add_uid);
+        final ImageButton downloadButton = templateView.findViewById(R.id.qput);
         downloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -122,8 +121,22 @@ public class PluginDropDownReceiver extends DropDownReceiver implements
         });
 
 
+        // GET
+        final ImageButton downloadButton2 = templateView.findViewById(R.id.qget);
+        downloadButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new Thread( new Runnable() { @Override public void run() {
+                    MainBridgeCPP bridge = new MainBridgeCPP();
+                    Log.d("###QTOKEN", "PluginDropDownReceiver get");
+                    bridge.get();
+                } } ).start();
+            }
+        });
+
+
         // SHARE
-        final ImageButton listButton = templateView.findViewById(R.id.list_markers);
+        final ImageButton listButton = templateView.findViewById(R.id.qshare);
         listButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -137,6 +150,7 @@ public class PluginDropDownReceiver extends DropDownReceiver implements
 
 
         // SPREAD
+        final ImageButton clearButton = templateView.findViewById(R.id.qspread);
         clearButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -150,7 +164,7 @@ public class PluginDropDownReceiver extends DropDownReceiver implements
 
 
         // GATHER
-        final ImageButton settingsButton = templateView.findViewById(R.id.settings);
+        final ImageButton settingsButton = templateView.findViewById(R.id.qgather);
         settingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

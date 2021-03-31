@@ -7,9 +7,7 @@
 
     <string name="text1">Nothing to show :p</string>
     <string name="text2">Click the top button to place a random marker.</string>
-
-
-
+    <string name="map">map</string>
 
 
 </resources>

@@ -7,6 +7,8 @@
     android:layout_weight="1"
     android:baselineAligned="false" android:gravity="center">
 
+
+
     <LinearLayout
         android:id="@+id/layout_coitainer"
         android:layout_width="0dp"
@@ -18,6 +20,7 @@
         android:letterSpacing="0.1"
         android:orientation="vertical">
 
+
         <LinearLayout
             android:id="@+id/layout_start"
             android:layout_width="fill_parent"
@@ -27,31 +30,34 @@
             android:orientation="vertical"
             android:visibility="visible">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:src="@drawable/marker_empty" />
 
-            <TextView
-                android:id="@+id/text1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:layout_marginBottom="40dp"
-                android:text="@string/text1"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:contentDescription="@string/map"
+            android:src="@drawable/marker_empty" />
 
-            <TextView
-                android:id="@+id/text2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="10sp"
-                android:text="@string/text2"
-                tools:ignore="SmallSp" />
+        <TextView
+            android:id="@+id/text1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="40dp"
+            android:text="@string/text1"
+            android:textSize="14sp" />
 
-        </LinearLayout>
+        <TextView
+            android:id="@+id/text2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text2"
+            android:textSize="10sp"
+            tools:ignore="SmallSp" />
 
-        <LinearLayout
+    </LinearLayout>
+
+
+    <LinearLayout
             android:id="@+id/layout_list_view"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
@@ -70,7 +76,8 @@
 
         </LinearLayout>
 
-    </LinearLayout>
+
+</LinearLayout>
 
     <LinearLayout
         android:layout_width="0dp"
@@ -82,43 +89,63 @@
         android:layout_marginEnd="20dp">
 
         <ImageButton
-            android:id="@+id/add_point"
+            android:id="@+id/qrun"
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:background="@drawable/button_corner"
-            android:src="@android:drawable/ic_menu_upload" />
+            android:src="@android:drawable/ic_menu_rotate"
+            android:contentDescription="run"
+            tools:ignore="HardcodedText" />
 
         <ImageButton
-            android:id="@+id/add_uid"
+            android:id="@+id/qput"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/button_corner"
-            android:src="@android:drawable/ic_menu_search" />
+            android:src="@android:drawable/ic_menu_upload"
+            android:contentDescription="put"
+            tools:ignore="HardcodedText" />
 
         <ImageButton
-            android:id="@+id/list_markers"
+            android:id="@+id/qget"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/button_corner"
-            android:src="@android:drawable/ic_menu_rotate" />
+            android:src="@android:drawable/ic_menu_send"
+            android:contentDescription="get"
+            tools:ignore="HardcodedText" />
 
         <ImageButton
-            android:id="@+id/clear_points"
+            android:id="@+id/qshare"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/button_corner"
-            android:src="@android:drawable/ic_menu_close_clear_cancel" />
+            android:src="@android:drawable/ic_menu_preferences"
+            android:contentDescription="share"
+            tools:ignore="HardcodedText" />
 
         <ImageButton
-            android:id="@+id/settings"
+            android:id="@+id/qspread"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/button_corner"
-            android:src="@android:drawable/ic_menu_preferences" />
+            android:src="@android:drawable/ic_menu_preferences"
+            android:contentDescription="spread"
+            tools:ignore="HardcodedText" />
+
+        <ImageButton
+            android:id="@+id/qgather"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/button_corner"
+            android:src="@android:drawable/ic_menu_preferences"
+            android:contentDescription="gather"
+            tools:ignore="HardcodedText" />
 
     </LinearLayout>
 

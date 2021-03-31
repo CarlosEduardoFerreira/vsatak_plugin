@@ -123,6 +123,38 @@ Java_com_atakmap_android_plugintemplate_Qtoken_put(JNIEnv *env, jclass clazz) {
 }
 
 
+JNIEXPORT void JNICALL
+Java_com_atakmap_android_plugintemplate_Qtoken_get(JNIEnv *env, jclass clazz) {
+
+
+    log_message("###QTOKEN 1 | Start");
+
+    try {
+
+        log_message("###QTOKEN  | get before");
+        node->doGet("Hello");
+        log_message("###QTOKEN  | get after");
+
+    } catch (const libconfig::FileIOException &fioex) {
+//        std::cerr << "###QTOKEN" << config_io_failure << "/sdcard/VIN/defaults.cfg"
+//                  << "\"" << std::endl;
+        log_message("###QTOKEN 4 | FileIOException");
+
+    } catch (const libconfig::ParseException &pex) {
+//        std::cerr << "###QTOKEN" << "### Parse error at " << pex.getFile() << ":" << pex.getLine()
+//                  << "-" << pex.getError() << std::endl;
+        log_message("###QTOKEN 5 | ParseException");
+
+    } catch (...) {
+        log_message("###QTOKEN 6 | ...");
+    }
+
+    log_message("###QTOKEN 7 | End");
+
+
+}
+
+
 JNIEXPORT void JNICALL // spread and gather
 Java_com_atakmap_android_plugintemplate_Qtoken_share(JNIEnv *env, jclass clazz) {
 
